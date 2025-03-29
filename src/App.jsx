@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import TextCounter from './components/TextCounter';
 import HeicToJpgConverter from './components/HeicToJpgConverter';
+import PomodoroTimer from './components/PomodoroTimer';
 
 
 function App() {
@@ -22,7 +23,8 @@ function App() {
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-xl font-semibold text-gray-900">
-                {activeTool === 'heic2jpg' ? 'HEIC to JPG Converter' : 'Text Counter'}
+                {activeTool === 'heic2jpg' ? 'HEIC to JPG Converter' : 
+                 activeTool === 'textcounter' ? 'Text Counter' : 'Pomodoro Timer'}
               </h1>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2 text-gray-500">
@@ -34,8 +36,10 @@ function App() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               {activeTool === 'heic2jpg' ? (
                 <HeicToJpgConverter />
-              ) : (
+              ) : activeTool === 'textcounter' ? (
                 <TextCounter />
+              ) : (
+                <PomodoroTimer />
               )}
             </div>
           </div>

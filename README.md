@@ -1,21 +1,23 @@
-# HEIC to JPG Converter
+# Multi-Tool Web Application
 
-A simple, browser-based tool to convert HEIC images to JPG format without uploading your files to any server. All conversion happens locally in your browser.
-![HEIC2JPG.png](HEIC2JPG.png "User Interface: 1")
+A collection of useful web-based tools including a HEIC to JPG converter, text counter, and Pomodoro timer. All tools run locally in your browser without requiring server uploads.
 
 ## Features
 
+### HEIC to JPG Converter
 - 🖼️ Convert HEIC/HEIF images to JPG format
 - 🔒 Privacy-focused: all processing happens in your browser
-- 📱 Responsive design works on desktop and mobile
-- 🚀 Fast conversion using modern web technologies
 - 💾 Batch download all converted images
 
-## How to Use
+### Text Counter
+- 📝 Count characters, words, and sentences in text
+- 📊 Real-time statistics as you type
+- 🔍 Detailed breakdown of text metrics
 
-1. Drag and drop your HEIC files into the upload area or click to browse files
-2. Click the "Convert to JPG" button
-3. Once conversion is complete, download individual files or use "Download All"
+### Pomodoro Timer
+- ⏱️ Customizable work and break durations
+- 🔄 Automatic switching between work and break periods
+- 🔔 Audio notification when timer ends
 
 ## Technology Stack
 
@@ -66,7 +68,7 @@ This project is configured for easy deployment to GitHub Pages. Follow these ste
 
 2. Push your code to the GitHub repository:
    ```bash
-   git remote add origin https://github.com/doyouknowmarc/helpfultools.git
+   git remote add origin https://github.com/doyouknowmarc/tools.git
    git branch -M main
    git push -u origin main
    ```
@@ -75,19 +77,8 @@ This project is configured for easy deployment to GitHub Pages. Follow these ste
 
 4. Go to your repository settings > Pages to check the deployment status
 
-5. Your site will be available at: `https://doyouknowmarc.github.io/helpfultools/`
+5. Your site will be available at: `https://doyouknowmarc.github.io/tools/`
 
 ## Contributing
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
-
-
-## setup github pages
-https://github.com/doyouknowmarc/tools
-
-git init
-git add -A
-git commit -m "first commit" 
-git branch -M main 
-git remote add origin https://github.com/doyouknowmarc/tools.git # Replace with your username and repo URL
-git push -u origin main

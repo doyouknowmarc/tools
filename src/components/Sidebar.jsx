@@ -3,7 +3,8 @@ import {
   PenLine, 
   Mail, 
   HelpCircle, 
-  ImagePlus 
+  ImagePlus,
+  Timer 
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -48,7 +49,31 @@ function Sidebar({ activeTool, setActiveTool }) {
               <span className="font-medium">Text Counter</span>
             </button>
             
-            <NavItem icon={<HelpCircle className="w-5 h-5" />} text="Coming soon .." />
+            <button 
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'pomodoro' 
+                  ? "bg-gray-900 text-white hover:bg-gray-800" 
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setActiveTool('pomodoro')}
+            >
+              <Timer className="w-5 h-5" />
+              <span className="font-medium">Pomodoro Timer</span>
+            </button>
+
+            <button 
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'comingsoon' 
+                  ? "bg-gray-900 text-white hover:bg-gray-800" 
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setActiveTool('comingsoon')}
+            >
+              <HelpCircle className="w-5 h-5" />
+              <span className="font-medium">coming soon ..</span>
+            </button>
           </nav>
         </div>
 
