@@ -135,7 +135,7 @@ function App() {
             <div className="p-4">
               <div className="flex items-center space-x-2 mb-8 cursor-pointer hover:bg-gray-50 p-2 rounded-lg">
                 <div className="w-8 h-8 bg-rose-500 rounded-lg flex items-center justify-center overflow-hidden">
-                  <img src="/imgs/Marc.jpeg" alt="Marc" className="w-full h-full object-cover" />
+                  <img src="/Marc.jpeg" alt="Marc" className="w-full h-full object-cover" />
                 </div>
                 <span className="text-gray-700 font-medium flex-1">Helpful Tools</span>
               </div>
