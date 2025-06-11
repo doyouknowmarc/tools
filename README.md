@@ -19,6 +19,10 @@ A collection of useful web-based tools including a HEIC to JPG converter, text c
 - 🔄 Automatic switching between work and break periods
 - 🔔 Audio notification when timer ends
 
+### Public IP Address
+- 🌐 Display your current public IP address
+- 🔄 Refresh the value with a single click
+
 ## Technology Stack
 
 - React.js for the UI
