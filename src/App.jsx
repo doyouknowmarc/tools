@@ -3,6 +3,7 @@ import Sidebar from './components/Sidebar';
 import TextCounter from './components/TextCounter';
 import HeicToJpgConverter from './components/HeicToJpgConverter';
 import PomodoroTimer from './components/PomodoroTimer';
+import PublicIp from './components/PublicIp';
 
 
 function App() {
@@ -23,8 +24,15 @@ function App() {
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-xl font-semibold text-gray-900">
-                {activeTool === 'heic2jpg' ? 'HEIC to JPG Converter' : 
-                 activeTool === 'textcounter' ? 'Text Counter' : 'Pomodoro Timer'}
+                {activeTool === 'heic2jpg'
+                  ? 'HEIC to JPG Converter'
+                  : activeTool === 'textcounter'
+                  ? 'Text Counter'
+                  : activeTool === 'pomodoro'
+                  ? 'Pomodoro Timer'
+                  : activeTool === 'ipaddress'
+                  ? 'Public IP Address'
+                  : 'coming soon ..'}
               </h1>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2 text-gray-500">
@@ -38,9 +46,11 @@ function App() {
                 <HeicToJpgConverter />
               ) : activeTool === 'textcounter' ? (
                 <TextCounter />
-              ) : (
+              ) : activeTool === 'pomodoro' ? (
                 <PomodoroTimer />
-              )}
+              ) : activeTool === 'ipaddress' ? (
+                <PublicIp />
+              ) : null}
             </div>
           </div>
         </div>

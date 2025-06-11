@@ -1,10 +1,11 @@
 import React from 'react';
-import { 
-  PenLine, 
-  Mail, 
-  HelpCircle, 
+import {
+  PenLine,
+  Mail,
+  HelpCircle,
   ImagePlus,
-  Timer 
+  Timer,
+  Globe
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -49,17 +50,30 @@ function Sidebar({ activeTool, setActiveTool }) {
               <span className="font-medium">Text Counter</span>
             </button>
             
-            <button 
+            <button
               className={clsx(
                 "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
-                activeTool === 'pomodoro' 
-                  ? "bg-gray-900 text-white hover:bg-gray-800" 
+                activeTool === 'pomodoro'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
                   : "text-gray-600 hover:bg-gray-50"
               )}
               onClick={() => setActiveTool('pomodoro')}
             >
               <Timer className="w-5 h-5" />
               <span className="font-medium">Pomodoro Timer</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'ipaddress'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setActiveTool('ipaddress')}
+            >
+              <Globe className="w-5 h-5" />
+              <span className="font-medium">Public IP</span>
             </button>
 
             <button 
