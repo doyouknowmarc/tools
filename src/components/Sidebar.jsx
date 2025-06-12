@@ -6,7 +6,7 @@ import {
   ImagePlus,
   Timer,
   Globe,
-  Sitemap
+  Table
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -86,7 +86,7 @@ function Sidebar({ activeTool, setActiveTool }) {
               )}
               onClick={() => setActiveTool('stakeholders')}
             >
-              <Sitemap className="w-5 h-5" />
+              <Table className="w-5 h-5" />
               <span className="font-medium">Stakeholder Matrix</span>
             </button>
 
