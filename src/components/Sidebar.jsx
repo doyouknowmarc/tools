@@ -5,7 +5,8 @@ import {
   HelpCircle,
   ImagePlus,
   Timer,
-  Globe
+  Globe,
+  Table
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -74,6 +75,19 @@ function Sidebar({ activeTool, setActiveTool }) {
             >
               <Globe className="w-5 h-5" />
               <span className="font-medium">Public IP</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'stakeholders'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setActiveTool('stakeholders')}
+            >
+              <Table className="w-5 h-5" />
+              <span className="font-medium">Stakeholder Matrix</span>
             </button>
 
             <button 
