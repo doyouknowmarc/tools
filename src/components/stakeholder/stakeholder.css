@@ -12,23 +12,6 @@
   position: relative;
 }
 
-.export-button {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  padding: 0.5rem 1.5rem;
-  background-color: #16a34a;
-  border-radius: 6px;
-  font-weight: 600;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.export-button:hover {
-  background-color: #22c55e;
-}
 
 .matrix-row {
   display: flex;
@@ -40,9 +23,9 @@
 .stakeholder-matrix {
   position: relative;
   width: 100%;
-  max-width: 600px;
+  max-width: none;
+  flex: 1;
   aspect-ratio: 1 / 1;
-  margin: 0 auto;
 }
 
 .axis-x,
