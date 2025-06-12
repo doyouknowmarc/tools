@@ -4,6 +4,7 @@ import TextCounter from './components/TextCounter';
 import HeicToJpgConverter from './components/HeicToJpgConverter';
 import PomodoroTimer from './components/PomodoroTimer';
 import PublicIp from './components/PublicIp';
+import StakeholderTool from './components/stakeholder/StakeholderTool';
 
 
 function App() {
@@ -32,6 +33,8 @@ function App() {
                   ? 'Pomodoro Timer'
                   : activeTool === 'ipaddress'
                   ? 'Public IP Address'
+                  : activeTool === 'stakeholders'
+                  ? 'Stakeholder Matrix'
                   : 'coming soon ..'}
               </h1>
               <div className="flex items-center space-x-4">
@@ -50,6 +53,8 @@ function App() {
                 <PomodoroTimer />
               ) : activeTool === 'ipaddress' ? (
                 <PublicIp />
+              ) : activeTool === 'stakeholders' ? (
+                <StakeholderTool />
               ) : null}
             </div>
           </div>

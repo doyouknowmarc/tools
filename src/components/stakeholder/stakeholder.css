@@ -1,0 +1,262 @@
+.app-container {
+  background-color: #f9fafb;
+  color: #111827;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-family: sans-serif;
+  position: relative;
+}
+
+.export-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1.5rem;
+  background-color: #16a34a;
+  border-radius: 6px;
+  font-weight: 600;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.export-button:hover {
+  background-color: #22c55e;
+}
+
+.matrix-row {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.stakeholder-matrix {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+}
+
+.axis-x,
+.axis-y {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: #222;
+}
+
+.axis-x::before,
+.axis-x::after,
+.axis-y::before,
+.axis-y::after {
+  content: '';
+  position: absolute;
+}
+
+.axis-x {
+  bottom: -1.5rem;
+  left: 0;
+  right: 0;
+  height: 1rem;
+}
+
+.axis-x::before {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #555;
+}
+
+.axis-x::after {
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid #555;
+  border-bottom: 2px solid #555;
+}
+
+.axis-y {
+  top: 0;
+  bottom: 0;
+  left: -1.5rem;
+  width: 1rem;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.axis-y::before {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #555;
+}
+
+.axis-y::after {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 6px;
+  height: 6px;
+  border-top: 2px solid #555;
+  border-right: 2px solid #555;
+}
+
+.matrix-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 2px;
+  background-color: #ddd;
+}
+
+.cell {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0.5rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #222;
+  background-color: #f4f7fa;
+  background-clip: padding-box;
+}
+
+.draggable-box {
+  background-color: #3b82f6;
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: grab;
+  touch-action: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.matrix-area {
+  background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 39px,
+      rgba(255, 255, 255, 0.05) 40px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 39px,
+      rgba(255, 255, 255, 0.05) 40px
+    );
+  background-size: 40px 40px;
+}
+
+.matrix-area::before,
+.matrix-area::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.matrix-area::before {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #475569 0 2px,
+    transparent 2px 40px
+  );
+}
+
+.matrix-area::after {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background-image: repeating-linear-gradient(
+    180deg,
+    #475569 0 2px,
+    transparent 2px 40px
+  );
+}
+
+.persona-card {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0.5rem;
+  width: 180px;
+  color: #000000;
+  position: absolute;
+  touch-action: none;
+  cursor: grab;
+  z-index: 10;
+}
+
+.persona-input,
+.persona-textarea {
+  width: 100%;
+  margin-bottom: 0.25rem;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 0.875rem;
+  padding: 0.25rem;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.persona-textarea {
+  resize: vertical;
+  min-height: 40px;
+}
+
+.delete-card-button {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  background: transparent;
+  border: none;
+  color: #475569;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.add-card-button {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  background-color: #3b82f6;
+  color: white;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  z-index: 50;
+}
+
+.add-card-button:hover {
+  background-color: #60a5fa;
+}
