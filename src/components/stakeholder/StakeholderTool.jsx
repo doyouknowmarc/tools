@@ -5,6 +5,7 @@ import { toPng } from 'html-to-image';
 import { saveAs } from 'file-saver';
 import StakeholderMatrix from './StakeholderMatrix.jsx';
 import PersonaCard from './PersonaCard.jsx';
+import StakeholderInfo from './StakeholderInfo.jsx';
 import { useStakeholderStore } from './store.js';
 import './stakeholder.css';
 
@@ -34,6 +35,7 @@ export default function StakeholderTool() {
 
   return (
     <div className="app-container w-full h-full relative flex flex-col items-center justify-center">
+      <StakeholderInfo />
       <DndContext onDragEnd={handleDragEnd} modifiers={modifiers}>
         <div className="matrix-row w-full" ref={exportRef}>
           <StakeholderMatrix
