@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import clsx from 'clsx';
 import Sidebar from './components/Sidebar';
 import TextCounter from './components/TextCounter';
 import HeicToJpgConverter from './components/HeicToJpgConverter';
@@ -21,7 +22,14 @@ function App() {
 
         {/* Main Content */}
         <div className="flex-1 p-8 overflow-y-auto h-screen">
-          <div className="max-w-4xl mx-auto">
+          <div
+            className={
+              clsx(
+                'mx-auto',
+                activeTool === 'stakeholders' ? 'w-full max-w-none' : 'max-w-4xl'
+              )
+            }
+          >
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-xl font-semibold text-gray-900">
