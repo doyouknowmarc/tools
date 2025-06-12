@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { DndContext } from '@dnd-kit/core';
+import { DndContext, useSensor, useSensors, PointerSensor } from '@dnd-kit/core';
 import { createSnapModifier } from '@dnd-kit/modifiers';
 import { toPng } from 'html-to-image';
 import { saveAs } from 'file-saver';
@@ -14,6 +14,8 @@ export default function StakeholderTool() {
   const addCard = useStakeholderStore((state) => state.addCard);
   const updatePosition = useStakeholderStore((state) => state.updatePosition);
   const exportRef = useRef();
+
+  const sensors = useSensors(useSensor(PointerSensor));
 
   const modifiers = [createSnapModifier(40)];
 
@@ -36,7 +38,7 @@ export default function StakeholderTool() {
   return (
     <div className="app-container w-full h-full relative flex flex-col items-center justify-center">
       <StakeholderInfo />
-      <DndContext onDragEnd={handleDragEnd} modifiers={modifiers}>
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd} modifiers={modifiers}>
         <div className="matrix-row w-full" ref={exportRef}>
           <StakeholderMatrix
             quadrantLabels={[

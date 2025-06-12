@@ -44,6 +44,7 @@ export default function PersonaCard({ id }) {
         value={card.name}
         onChange={(e) => updateCard(id, { name: e.target.value })}
         onPointerDown={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
         required
       />
       <input
@@ -53,6 +54,7 @@ export default function PersonaCard({ id }) {
         value={card.role}
         onChange={(e) => updateCard(id, { role: e.target.value })}
         onPointerDown={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
       />
       <textarea
         className="persona-textarea"
@@ -60,6 +62,7 @@ export default function PersonaCard({ id }) {
         value={card.why}
         onChange={(e) => updateCard(id, { why: e.target.value })}
         onPointerDown={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
       />
     </div>
   );
