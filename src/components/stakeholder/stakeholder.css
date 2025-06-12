@@ -14,7 +14,7 @@
 
 .export-button {
   position: absolute;
-  top: 1rem;
+  bottom: 1rem;
   right: 1rem;
   padding: 0.5rem 1.5rem;
   background-color: #16a34a;
@@ -40,9 +40,9 @@
 .stakeholder-matrix {
   position: relative;
   width: 100%;
-  max-width: 600px;
+  max-width: none;
+  flex: 1;
   aspect-ratio: 1 / 1;
-  margin: 0 auto;
 }
 
 .axis-x,

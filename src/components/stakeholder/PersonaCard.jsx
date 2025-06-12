@@ -29,6 +29,7 @@ export default function PersonaCard({ id }) {
         type="button"
         className="delete-card-button"
         onClick={() => removeCard(id)}
+        onPointerDown={(e) => e.stopPropagation()}
       >
         ×
       </button>

@@ -13,7 +13,7 @@ const StakeholderMatrix = forwardRef(function StakeholderMatrix(
 ) {
   const [tl, tr, bl, br] = quadrantLabels;
   return (
-    <div ref={ref} className="stakeholder-matrix relative w-full max-w-lg aspect-square mx-auto">
+    <div ref={ref} className="stakeholder-matrix relative w-full aspect-square flex-1">
       <div className="axis-y">
         <span>{yLabel}</span>
       </div>
