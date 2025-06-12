@@ -35,7 +35,6 @@ export default function StakeholderTool() {
 
   return (
     <div className="app-container w-full h-full relative flex flex-col items-center justify-center">
-      <StakeholderInfo />
       <DndContext onDragEnd={handleDragEnd} modifiers={modifiers}>
         <div className="matrix-row w-full" ref={exportRef}>
           <StakeholderMatrix
@@ -61,6 +60,7 @@ export default function StakeholderTool() {
           </StakeholderMatrix>
         </div>
       </DndContext>
+      <StakeholderInfo />
       <div className="absolute bottom-4 right-4 flex gap-2">
         <button
           type="button"
