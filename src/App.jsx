@@ -26,7 +26,7 @@ function App() {
             className={
               clsx(
                 'mx-auto',
-                activeTool === 'stakeholders' ? 'w-2/3 max-w-none' : 'max-w-4xl'
+                activeTool === 'stakeholders' ? 'w-full max-w-none' : 'max-w-4xl'
               )
             }
           >

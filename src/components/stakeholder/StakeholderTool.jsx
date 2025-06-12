@@ -35,7 +35,7 @@ export default function StakeholderTool() {
   return (
     <div className="app-container w-full h-full relative flex flex-col items-center justify-center">
       <DndContext onDragEnd={handleDragEnd} modifiers={modifiers}>
-        <div className="matrix-row w-full lg:w-2/3 mx-auto" ref={exportRef}>
+        <div className="matrix-row w-full" ref={exportRef}>
           <StakeholderMatrix
             quadrantLabels={[
               'Blockers',
@@ -60,7 +60,11 @@ export default function StakeholderTool() {
           </StakeholderMatrix>
         </div>
       </DndContext>
-      <button type="button" onClick={handleExport} className="export-button">
+      <button
+        type="button"
+        onClick={handleExport}
+        className="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md transition-colors"
+      >
         Export as PNG
       </button>
     </div>
