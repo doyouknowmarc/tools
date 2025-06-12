@@ -45,7 +45,6 @@ export default function StakeholderTool() {
               'Bystanders',
               'Defenders',
             ]}
-            onAddCard={() => addCard(2)}
           >
             {cards
               .filter((card) => card.matrixId === 2)
@@ -53,7 +52,7 @@ export default function StakeholderTool() {
                 <PersonaCard key={card.id} id={card.id} />
               ))}
           </StakeholderMatrix>
-          <StakeholderMatrix onAddCard={() => addCard(1)}>
+          <StakeholderMatrix>
             {cards
               .filter((card) => card.matrixId === 1)
               .map((card) => (
@@ -62,13 +61,22 @@ export default function StakeholderTool() {
           </StakeholderMatrix>
         </div>
       </DndContext>
-      <button
-        type="button"
-        onClick={handleExport}
-        className="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md transition-colors"
-      >
-        Export as PNG
-      </button>
+      <div className="absolute bottom-4 right-4 flex gap-2">
+        <button
+          type="button"
+          onClick={() => addCard(1)}
+          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-md transition-colors"
+        >
+          +
+        </button>
+        <button
+          type="button"
+          onClick={handleExport}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md transition-colors"
+        >
+          Export as PNG
+        </button>
+      </div>
     </div>
   );
 }

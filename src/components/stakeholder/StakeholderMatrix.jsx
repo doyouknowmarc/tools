@@ -8,7 +8,7 @@ const defaultQuadrants = [
 ];
 
 const StakeholderMatrix = forwardRef(function StakeholderMatrix(
-  { children, quadrantLabels = defaultQuadrants, xLabel = 'Interest', yLabel = 'Influence', onAddCard },
+  { children, quadrantLabels = defaultQuadrants, xLabel = 'Interest', yLabel = 'Influence' },
   ref
 ) {
   const [tl, tr, bl, br] = quadrantLabels;
@@ -27,11 +27,6 @@ const StakeholderMatrix = forwardRef(function StakeholderMatrix(
         <div className="cell">{br}</div>
       </div>
       {children}
-      {onAddCard && (
-        <button type="button" className="add-card-button" onClick={onAddCard}>
-          +
-        </button>
-      )}
     </div>
   );
 });

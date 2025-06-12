@@ -54,6 +54,7 @@
   justify-content: center;
   font-size: 0.9rem;
   color: #222;
+  z-index: 40;
 }
 
 .axis-x::before,
@@ -82,11 +83,11 @@
 .axis-x::after {
   right: 0;
   top: 50%;
-  transform: translateY(-50%) rotate(45deg);
+  transform: translateY(-50%) rotate(-45deg);
   width: 6px;
   height: 6px;
-  border-right: 2px solid #555;
-  border-bottom: 2px solid #555;
+  border: 2px solid #555;
+  border-width: 0 2px 2px 0;
 }
 
 .axis-y {
@@ -109,11 +110,11 @@
 .axis-y::after {
   top: 0;
   left: 50%;
-  transform: translateX(-50%) rotate(45deg);
+  transform: translateX(-50%) rotate(-135deg);
   width: 6px;
   height: 6px;
-  border-top: 2px solid #555;
-  border-right: 2px solid #555;
+  border: 2px solid #555;
+  border-width: 0 2px 2px 0;
 }
 
 .matrix-grid {
