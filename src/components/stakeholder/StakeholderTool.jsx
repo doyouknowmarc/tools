@@ -63,6 +63,7 @@ export default function StakeholderTool() {
           </StakeholderMatrix>
         </div>
       </DndContext>
+      <StakeholderInfo />
       <div className="absolute bottom-4 right-4 flex gap-2">
         <button
           type="button"
