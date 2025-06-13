@@ -43,7 +43,7 @@ A collection of useful web-based tools including a HEIC to JPG converter, text c
 ```bash
 # Clone the repository
 git clone https://github.com/doyouknowmarc/tools.git
-cd helpfultools
+cd tools
 
 # Install dependencies
 npm install
