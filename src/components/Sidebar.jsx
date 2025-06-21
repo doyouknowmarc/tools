@@ -1,14 +1,15 @@
 import React from 'react';
-import {
-  PenLine,
-  Mail,
-  HelpCircle,
-  ImagePlus,
-  Timer,
-  Globe,
-  Table,
-  ScanText
-} from 'lucide-react';
+  import {
+    PenLine,
+    Mail,
+    HelpCircle,
+    ImagePlus,
+    Timer,
+    Globe,
+    Table,
+    ScanText,
+    Mic
+  } from 'lucide-react';
 import clsx from 'clsx';
 
 function Sidebar({ activeTool, setActiveTool }) {
@@ -89,6 +90,19 @@ function Sidebar({ activeTool, setActiveTool }) {
             >
               <ScanText className="w-5 h-5" />
               <span className="font-medium">Document OCR</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'whisper'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setActiveTool('whisper')}
+            >
+              <Mic className="w-5 h-5" />
+              <span className="font-medium">Whisper Transcriber</span>
             </button>
 
             <button
