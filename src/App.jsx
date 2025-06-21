@@ -7,6 +7,7 @@ import PomodoroTimer from './components/PomodoroTimer';
 import PublicIp from './components/PublicIp';
 import StakeholderTool from './components/stakeholder/StakeholderTool';
 import OcrTool from './components/ocr/OcrTool';
+import WhisperTranscriber from './components/transcribe/WhisperTranscriber';
 
 
 function App() {
@@ -46,6 +47,8 @@ function App() {
                   ? 'Stakeholder Matrix'
                   : activeTool === 'ocr'
                   ? 'Document OCR'
+                  : activeTool === 'whisper'
+                  ? 'Whisper Transcriber'
                   : 'coming soon ..'}
               </h1>
               <div className="flex items-center space-x-4">
@@ -68,6 +71,8 @@ function App() {
                 <StakeholderTool />
               ) : activeTool === 'ocr' ? (
                 <OcrTool />
+              ) : activeTool === 'whisper' ? (
+                <WhisperTranscriber />
               ) : null}
             </div>
           </div>
