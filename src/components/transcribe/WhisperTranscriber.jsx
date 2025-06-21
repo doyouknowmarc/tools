@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Mic, Loader } from 'lucide-react';
-import { pipeline, read_audio } from '@xenova/transformers';
+import { pipeline } from '@xenova/transformers';
 
 export default function WhisperTranscriber() {
   const [file, setFile] = useState(null);
@@ -33,10 +33,8 @@ export default function WhisperTranscriber() {
       }
 
       const objectUrl = URL.createObjectURL(file);
-      const audio = await read_audio(objectUrl, 16000);
+      const output = await t(objectUrl);
       URL.revokeObjectURL(objectUrl);
-
-      const output = await t(audio);
       setResult(output.text.trim());
     } catch (err) {
       console.error(err);

@@ -23,6 +23,10 @@ A collection of useful web-based tools including a HEIC to JPG converter, text c
 - 🌐 Display your current public IP address
 - 🔄 Refresh the value with a single click
 
+### Whisper Transcriber
+- 🎙️ Upload common audio files (MP3, WAV, etc.) and transcribe them in the browser
+- 📨 Runs fully offline using a WebAssembly build of Whisper
+
 ## Technology Stack
 
 - React.js for the UI
