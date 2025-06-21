@@ -6,7 +6,8 @@ import {
   ImagePlus,
   Timer,
   Globe,
-  Table
+  Table,
+  ScanText
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -75,6 +76,19 @@ function Sidebar({ activeTool, setActiveTool }) {
             >
               <Globe className="w-5 h-5" />
               <span className="font-medium">Public IP</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'ocr'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setActiveTool('ocr')}
+            >
+              <ScanText className="w-5 h-5" />
+              <span className="font-medium">Document OCR</span>
             </button>
 
             <button

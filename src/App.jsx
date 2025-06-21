@@ -6,6 +6,7 @@ import HeicToJpgConverter from './components/HeicToJpgConverter';
 import PomodoroTimer from './components/PomodoroTimer';
 import PublicIp from './components/PublicIp';
 import StakeholderTool from './components/stakeholder/StakeholderTool';
+import OcrTool from './components/ocr/OcrTool';
 
 
 function App() {
@@ -43,6 +44,8 @@ function App() {
                   ? 'Public IP Address'
                   : activeTool === 'stakeholders'
                   ? 'Stakeholder Matrix'
+                  : activeTool === 'ocr'
+                  ? 'Document OCR'
                   : 'coming soon ..'}
               </h1>
               <div className="flex items-center space-x-4">
@@ -63,6 +66,8 @@ function App() {
                 <PublicIp />
               ) : activeTool === 'stakeholders' ? (
                 <StakeholderTool />
+              ) : activeTool === 'ocr' ? (
+                <OcrTool />
               ) : null}
             </div>
           </div>
