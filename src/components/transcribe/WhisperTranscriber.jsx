@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Mic, Loader } from 'lucide-react';
-import { pipeline } from '@xenova/transformers';
+import { pipeline, read_audio } from '@xenova/transformers';
 
 export default function WhisperTranscriber() {
   const [file, setFile] = useState(null);
@@ -23,11 +23,20 @@ export default function WhisperTranscriber() {
       let t = transcriber;
       if (!t) {
         setModelLoading(true);
-        t = await pipeline('automatic-speech-recognition', 'Xenova/whisper-tiny.en', { quantized: true });
+        t = await pipeline(
+          'automatic-speech-recognition',
+          'Xenova/whisper-tiny.en',
+          { quantized: true }
+        );
         setTranscriber(t);
         setModelLoading(false);
       }
-      const output = await t(file);
+
+      const objectUrl = URL.createObjectURL(file);
+      const audio = await read_audio(objectUrl, 16000);
+      URL.revokeObjectURL(objectUrl);
+
+      const output = await t(audio);
       setResult(output.text.trim());
     } catch (err) {
       console.error(err);
