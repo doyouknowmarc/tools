@@ -19,7 +19,10 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "file-saver": "^2.0.5",
     "html-to-image": "^1.11.13",
-    "zustand": "^4.5.2"
+    "zustand": "^4.5.2",
+    "tesseract.js": "^5.0.4",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.0.379"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",
