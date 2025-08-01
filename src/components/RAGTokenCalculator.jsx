@@ -12,8 +12,8 @@ const RAGTokenCalculator = () => {
     reRankOutputTokens: 50,
     ragSystemPrompt: 150,
     finalAnswerTokens: 300,
-    inputTokenPrice: 0.00015,
-    outputTokenPrice: 0.0006
+    inputTokenPrice: 2,
+    outputTokenPrice: 8
   });
 
   const scenarios = {
@@ -72,16 +72,19 @@ const RAGTokenCalculator = () => {
       outputTokenPrice
     } = currentValues;
 
+    const inputPricePerToken = inputTokenPrice / 1_000_000;
+    const outputPricePerToken = outputTokenPrice / 1_000_000;
+
     const step1_Query = userQuery;
     const step2_ChunksN = chunkSize * numChunks;
     const step3_PromptRerank = userQuery + step2_ChunksN + reRankOverhead;
-    const step3_Cost = step3_PromptRerank * inputTokenPrice;
+    const step3_Cost = step3_PromptRerank * inputPricePerToken;
     const step4_OutputRerank = reRankOutputTokens;
-    const step4_Cost = step4_OutputRerank * outputTokenPrice;
+    const step4_Cost = step4_OutputRerank * outputPricePerToken;
     const step5_PromptRAG = userQuery + (chunkSize * topKChunks) + ragSystemPrompt;
-    const step5_Cost = step5_PromptRAG * inputTokenPrice;
+    const step5_Cost = step5_PromptRAG * inputPricePerToken;
     const step6_OutputAnswer = finalAnswerTokens;
-    const step6_Cost = step6_OutputAnswer * outputTokenPrice;
+    const step6_Cost = step6_OutputAnswer * outputPricePerToken;
 
     const totalInputTokens = step3_PromptRerank + step5_PromptRAG;
     const totalOutputTokens = step4_OutputRerank + step6_OutputAnswer;
@@ -307,29 +310,29 @@ const RAGTokenCalculator = () => {
               </h3>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Input Token Price ($)</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Input Token Price ($ per 1M tokens)</label>
                   <input
                     type="number"
-                    step="0.000001"
+                    step="0.01"
                     value={customValues.inputTokenPrice}
                     onChange={(e) => handleCustomChange('inputTokenPrice', e.target.value)}
                     className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <div className="text-xs text-gray-500 mt-1">
-                    Cost per input token. Applied to Steps 3 & 5 (reranking and RAG prompts).
+                    Cost per million input tokens. Applied to Steps 3 & 5 (reranking and RAG prompts).
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Output Token Price ($)</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Output Token Price ($ per 1M tokens)</label>
                   <input
                     type="number"
-                    step="0.000001"
+                    step="0.01"
                     value={customValues.outputTokenPrice}
                     onChange={(e) => handleCustomChange('outputTokenPrice', e.target.value)}
                     className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <div className="text-xs text-gray-500 mt-1">
-                    Cost per output token. Applied to Steps 4 & 6 (reranker response and final answer).
+                    Cost per million output tokens. Applied to Steps 4 & 6 (reranker response and final answer).
                   </div>
                 </div>
               </div>
