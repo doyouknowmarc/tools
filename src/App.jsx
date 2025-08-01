@@ -7,6 +7,7 @@ import PomodoroTimer from './components/PomodoroTimer';
 import PublicIp from './components/PublicIp';
 import StakeholderTool from './components/stakeholder/StakeholderTool';
 import OcrTool from './components/ocr/OcrTool';
+import RAGTokenCalculator from './components/RAGTokenCalculator';
 
 
 function App() {
@@ -27,7 +28,9 @@ function App() {
             className={
               clsx(
                 'mx-auto',
-                activeTool === 'stakeholders' ? 'w-full max-w-none' : 'max-w-4xl'
+                activeTool === 'stakeholders' || activeTool === 'ragcalc'
+                  ? 'w-full max-w-none'
+                  : 'max-w-4xl'
               )
             }
           >
@@ -44,6 +47,8 @@ function App() {
                   ? 'Public IP Address'
                   : activeTool === 'stakeholders'
                   ? 'Stakeholder Matrix'
+                  : activeTool === 'ragcalc'
+                  ? 'RAG Token Calculator'
                   : activeTool === 'ocr'
                   ? 'Document OCR'
                   : 'coming soon ..'}
@@ -66,6 +71,8 @@ function App() {
                 <PublicIp />
               ) : activeTool === 'stakeholders' ? (
                 <StakeholderTool />
+              ) : activeTool === 'ragcalc' ? (
+                <RAGTokenCalculator />
               ) : activeTool === 'ocr' ? (
                 <OcrTool />
               ) : null}
