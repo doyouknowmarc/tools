@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import Card from './ui/Card';
+import Button from './ui/Button';
 
 const loremWords = [
   'Lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
@@ -110,14 +112,14 @@ export default function TokenProductionRateDemo() {
   const progress = tokens.length > 0 ? ((tokensGenerated / tokens.length) * 100).toFixed(1) : 0;
 
   return (
-    <div className="font-mono text-black space-y-8">
+    <div className="space-y-8">
       <div className="text-center">
-        <h2 className="text-2xl font-bold border-b-2 border-black pb-4">Token Production Rate Demo</h2>
+        <h2 className="text-2xl font-bold text-gray-800">Token Production Rate Demo</h2>
       </div>
 
-      <div className="border-2 border-black p-6 bg-gray-50">
-        <h3 className="font-bold mb-4">📖 Human Reading Speed Reference</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+      <Card className="bg-gray-50">
+        <h3 className="font-semibold mb-4">📖 Human Reading Speed Reference</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
           <div>
             <p className="mb-1"><strong>Average Reading Speed:</strong> 200-300 words/minute</p>
             <p className="mb-1"><strong>Speed Readers:</strong> 400-700 words/minute</p>
@@ -129,9 +131,9 @@ export default function TokenProductionRateDemo() {
             <p><strong>Beyond Human:</strong> 20+ tokens/sec</p>
           </div>
         </div>
-      </div>
+      </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-2 border-black p-6">
+      <Card className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <label htmlFor="textLength" className="block text-xs font-bold uppercase tracking-wide mb-2">
             Text Length: <span>{textLength}</span> words
@@ -162,54 +164,40 @@ export default function TokenProductionRateDemo() {
             className="w-full"
           />
         </div>
-      </div>
-
+      </Card>
       <div className="flex justify-center flex-wrap gap-4">
-        <button
-          className="px-6 py-2 border-2 border-black bg-black text-white font-bold uppercase tracking-wide hover:bg-white hover:text-black disabled:opacity-50 disabled:cursor-not-allowed"
-          onClick={startGeneration}
-          disabled={isGenerating}
-        >
-          Start
-        </button>
-        <button
-          className="px-6 py-2 border-2 border-black font-bold uppercase tracking-wide hover:bg-black hover:text-white disabled:opacity-50"
-          onClick={stopGeneration}
-          disabled={!isGenerating}
-        >
+        <Button onClick={startGeneration} disabled={isGenerating}>Start</Button>
+        <Button onClick={stopGeneration} disabled={!isGenerating} className="bg-white text-primary-600 border border-primary-600 hover:bg-primary-50">
           Stop
-        </button>
-        <button
-          className="px-6 py-2 border-2 border-black font-bold uppercase tracking-wide hover:bg-black hover:text-white"
-          onClick={resetDemo}
-        >
+        </Button>
+        <Button onClick={resetDemo} className="bg-white text-primary-600 border border-primary-600 hover:bg-primary-50">
           Reset
-        </button>
+        </Button>
       </div>
 
-      <div className="bg-black text-white p-6 border-2 border-black min-h-[300px] text-sm leading-relaxed overflow-y-auto">
+      <Card className="min-h-[300px] text-sm leading-relaxed overflow-y-auto bg-gray-50">
         {outputTokens.map((t, i) => (
           <span key={i}>{(i > 0 ? ' ' : '') + t}</span>
         ))}
-        {isGenerating && <span className="bg-white text-black px-1 ml-1 animate-pulse">|</span>}
-      </div>
+        {isGenerating && <span className="text-primary-600 px-1 ml-1 animate-pulse">|</span>}
+      </Card>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="border-2 border-black p-4 text-center">
+        <div className="border border-gray-200 rounded-lg p-4 text-center">
           <div className="text-xl font-bold mb-1">{tokensGenerated}</div>
-          <div className="text-xs uppercase tracking-wide">Tokens Generated</div>
+          <div className="text-xs uppercase tracking-wide text-gray-600">Tokens Generated</div>
         </div>
-        <div className="border-2 border-black p-4 text-center">
+        <div className="border border-gray-200 rounded-lg p-4 text-center">
           <div className="text-xl font-bold mb-1">{currentSpeed}</div>
-          <div className="text-xs uppercase tracking-wide">Current Speed (T/S)</div>
+          <div className="text-xs uppercase tracking-wide text-gray-600">Current Speed (T/S)</div>
         </div>
-        <div className="border-2 border-black p-4 text-center">
+        <div className="border border-gray-200 rounded-lg p-4 text-center">
           <div className="text-xl font-bold mb-1">{timeElapsed.toFixed(1)}s</div>
-          <div className="text-xs uppercase tracking-wide">Time Elapsed</div>
+          <div className="text-xs uppercase tracking-wide text-gray-600">Time Elapsed</div>
         </div>
-        <div className="border-2 border-black p-4 text-center">
+        <div className="border border-gray-200 rounded-lg p-4 text-center">
           <div className="text-xl font-bold mb-1">{progress}%</div>
-          <div className="text-xs uppercase tracking-wide">Progress</div>
+          <div className="text-xs uppercase tracking-wide text-gray-600">Progress</div>
         </div>
       </div>
     </div>

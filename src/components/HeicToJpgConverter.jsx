@@ -133,7 +133,7 @@ export default function HeicToJpgConverter() {
               {...getRootProps()} 
               className={clsx(
                 "border-2 border-dashed rounded-lg p-8 cursor-pointer",
-                isDragActive ? "border-rose-400 bg-rose-50" : "border-gray-200"
+                isDragActive ? "border-primary-400 bg-primary-50" : "border-gray-200"
               )}
             >
               <input {...getInputProps()} accept=".heic,image/heic,image/heif" />
@@ -142,7 +142,7 @@ export default function HeicToJpgConverter() {
                 <p className="text-sm text-gray-500">
                   {isDragActive ? "Drop the files here" : "Click or drag and drop to upload HEIC files"}
                 </p>
-                <button className="text-rose-500 text-sm mt-2">Browse Files</button>
+                <button className="text-primary-500 text-sm mt-2">Browse Files</button>
               </div>
             </div>
           </div>
@@ -183,8 +183,8 @@ export default function HeicToJpgConverter() {
           )}
 
           {/* Convert Button */}
-          <button 
-            className="w-full bg-rose-400 text-white py-3 rounded-lg hover:bg-rose-500 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+          <button
+            className="w-full bg-primary-500 text-white py-3 rounded-lg hover:bg-primary-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
             onClick={convertFiles}
             disabled={uploadedFiles.length === 0 || isConverting}
           >
