@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { RefreshCcw } from 'lucide-react';
+import Button from './ui/Button';
 
 export default function PublicIp() {
   const [ip, setIp] = useState(null);
@@ -29,13 +30,10 @@ export default function PublicIp() {
       <div className="text-gray-700 text-lg">
         {loading ? 'Loading...' : error ? error : ip}
       </div>
-      <button
-        className="flex items-center space-x-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
-        onClick={fetchIp}
-      >
+      <Button className="flex items-center space-x-2" onClick={fetchIp}>
         <RefreshCcw className="w-4 h-4" />
         <span>Refresh</span>
-      </button>
+      </Button>
     </div>
   );
 }

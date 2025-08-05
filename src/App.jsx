@@ -9,6 +9,7 @@ import StakeholderTool from './components/stakeholder/StakeholderTool';
 import OcrTool from './components/ocr/OcrTool';
 import RAGTokenCalculator from './components/RAGTokenCalculator';
 import TokenProductionRateDemo from './components/TokenProductionRateDemo';
+import Card from './components/ui/Card';
 
 
 function App() {
@@ -63,7 +64,7 @@ function App() {
             </div>
 
             {/* Content Card */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <Card>
               {activeTool === 'heic2jpg' ? (
                 <HeicToJpgConverter />
               ) : activeTool === 'textcounter' ? (
@@ -81,7 +82,7 @@ function App() {
               ) : activeTool === 'tokenrate' ? (
                 <TokenProductionRateDemo />
               ) : null}
-            </div>
+            </Card>
           </div>
         </div>
       </div>
