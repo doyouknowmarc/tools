@@ -30,26 +30,8 @@ export default function ProcessingIndicator({ files, onDownload, onRemove }) {
         return Loader;
     }
   };
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'completed':
-        return 'text-green-600';
-      case 'error':
-        return 'text-red-600';
-      default:
-        return 'text-blue-600';
-    }
-  };
-  const getBackgroundColor = (status) => {
-    switch (status) {
-      case 'completed':
-        return 'bg-green-50 border-green-200';
-      case 'error':
-        return 'bg-red-50 border-red-200';
-      default:
-        return 'bg-blue-50 border-blue-200';
-    }
-  };
+  const getStatusColor = () => 'text-black';
+  const getBackgroundColor = () => 'bg-gray-50 border-gray-200';
   return (
     <div className="w-full max-w-4xl mx-auto mt-8">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">
@@ -104,7 +86,7 @@ export default function ProcessingIndicator({ files, onDownload, onRemove }) {
                       <div className="mt-2">
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div
-                            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                            className="bg-black h-2 rounded-full transition-all duration-300"
                             style={{ width: `${file.progress}%` }}
                           />
                         </div>
@@ -127,7 +109,7 @@ export default function ProcessingIndicator({ files, onDownload, onRemove }) {
                     {file.status === 'completed' && (
                       <button
                         onClick={() => onDownload(file)}
-                        className="p-2 text-green-600 hover:bg-green-100 rounded-full transition-colors duration-200"
+                        className="p-2 text-black hover:bg-gray-100 rounded-full transition-colors duration-200"
                         title="Download processed file"
                       >
                         <Download className="w-5 h-5" />
@@ -136,7 +118,7 @@ export default function ProcessingIndicator({ files, onDownload, onRemove }) {
                     {file.status === 'completed' && hasPageTexts && (
                       <button
                         onClick={() => toggleExpanded(file.id)}
-                        className="p-2 text-blue-600 hover:bg-blue-100 rounded-full transition-colors duration-200"
+                        className="p-2 text-black hover:bg-gray-100 rounded-full transition-colors duration-200"
                         title={isExpanded ? 'Hide page text' : 'Show page text'}
                       >
                         {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}

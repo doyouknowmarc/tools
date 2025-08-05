@@ -110,7 +110,7 @@ export default function UploadZone({ onFilesSelected, isProcessing, acceptedForm
       <div
         className={`
           relative border-2 border-dashed rounded-xl p-12 text-center transition-all duration-300 cursor-pointer
-          ${isDragActive ? 'border-blue-500 bg-blue-50 scale-105' : 'border-gray-300 hover:border-gray-400'}
+          ${isDragActive ? 'border-black bg-gray-50 scale-105' : 'border-gray-300 hover:border-gray-400'}
           ${isProcessing ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'}
         `}
         onDragEnter={handleDragIn}
@@ -136,11 +136,11 @@ export default function UploadZone({ onFilesSelected, isProcessing, acceptedForm
         <div className="flex flex-col items-center space-y-4">
           <div className={`
             p-6 rounded-full transition-all duration-300
-            ${isDragActive ? 'bg-blue-100' : 'bg-gray-100'}
+            ${isDragActive ? 'bg-gray-100' : 'bg-gray-100'}
           `}>
             <Upload className={`
               w-12 h-12 transition-colors duration-300
-              ${isDragActive ? 'text-blue-600' : 'text-gray-600'}
+              ${isDragActive ? 'text-black' : 'text-gray-600'}
             `} />
           </div>
           <div className="space-y-2">
@@ -148,7 +148,7 @@ export default function UploadZone({ onFilesSelected, isProcessing, acceptedForm
               {isDragActive ? 'Drop files here' : 'Upload Documents for OCR'}
             </h3>
             <p className="text-gray-600">
-              Drag and drop files here, or <span className="text-blue-600 font-medium">click to browse</span>
+              Drag and drop files here, or <span className="text-black font-medium">click to browse</span>
             </p>
           </div>
           <div className="flex items-center space-x-6 text-sm text-gray-500">
@@ -167,8 +167,8 @@ export default function UploadZone({ onFilesSelected, isProcessing, acceptedForm
           </div>
         </div>
         {isDragActive && (
-          <div className="absolute inset-0 rounded-xl bg-blue-500 bg-opacity-10 flex items-center justify-center">
-            <div className="text-blue-600 font-semibold text-lg">Release to upload files</div>
+          <div className="absolute inset-0 rounded-xl bg-black bg-opacity-10 flex items-center justify-center">
+            <div className="text-black font-semibold text-lg">Release to upload files</div>
           </div>
         )}
       </div>

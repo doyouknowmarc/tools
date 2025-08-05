@@ -6,8 +6,8 @@ export default function Footer() {
     <footer className="mt-16 text-center">
       <div className="border-t border-gray-200 pt-8">
         <div className="flex flex-wrap justify-center gap-8 mb-6">
-          <div className="flex items-start space-x-3 text-sm max-w-xs">
-            <Lock className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+            <div className="flex items-start space-x-3 text-sm max-w-xs">
+              <Lock className="w-5 h-5 text-black flex-shrink-0 mt-0.5" />
             <div>
               <div className="font-medium text-gray-900">Privacy First</div>
               <div className="text-gray-600">
@@ -16,8 +16,8 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="flex items-start space-x-3 text-sm max-w-xs">
-            <Cpu className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div className="flex items-start space-x-3 text-sm max-w-xs">
+              <Cpu className="w-5 h-5 text-black flex-shrink-0 mt-0.5" />
             <div>
               <div className="font-medium text-gray-900">Advanced OCR</div>
               <div className="text-gray-600">
@@ -26,8 +26,8 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="flex items-start space-x-3 text-sm max-w-xs">
-            <Info className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+            <div className="flex items-start space-x-3 text-sm max-w-xs">
+              <Info className="w-5 h-5 text-black flex-shrink-0 mt-0.5" />
             <div>
               <div className="font-medium text-gray-900">Searchable Output</div>
               <div className="text-gray-600">

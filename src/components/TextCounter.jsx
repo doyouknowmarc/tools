@@ -18,7 +18,7 @@ export default function TextCounter() {
 
   return (
     <div className="flex flex-col h-full">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="block text-sm font-medium text-black mb-2">
         Type or paste your text here
       </label>
       <textarea
@@ -30,16 +30,16 @@ export default function TextCounter() {
       
       <div className="mt-6 grid grid-cols-3 gap-4">
         <div className="border border-gray-200 rounded-lg p-4">
-          <p className="text-sm font-medium text-gray-700">Words</p>
-          <p className="text-2xl font-bold text-gray-800">{countWords()}</p>
+          <p className="text-sm font-medium text-black">Words</p>
+          <p className="text-2xl font-bold text-black">{countWords()}</p>
         </div>
         <div className="border border-gray-200 rounded-lg p-4">
-          <p className="text-sm font-medium text-gray-700">Characters</p>
-          <p className="text-2xl font-bold text-gray-800">{countCharacters()}</p>
+          <p className="text-sm font-medium text-black">Characters</p>
+          <p className="text-2xl font-bold text-black">{countCharacters()}</p>
         </div>
         <div className="border border-gray-200 rounded-lg p-4">
-          <p className="text-sm font-medium text-gray-700">Spaces</p>
-          <p className="text-2xl font-bold text-gray-800">{countSpaces()}</p>
+          <p className="text-sm font-medium text-black">Spaces</p>
+          <p className="text-2xl font-bold text-black">{countSpaces()}</p>
         </div>
       </div>
     </div>

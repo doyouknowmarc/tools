@@ -9,6 +9,7 @@ import StakeholderTool from './components/stakeholder/StakeholderTool';
 import OcrTool from './components/ocr/OcrTool';
 import RAGTokenCalculator from './components/RAGTokenCalculator';
 import TokenProductionRateDemo from './components/TokenProductionRateDemo';
+import Card from './components/ui/Card';
 
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
 
   
   return (
-    <div className="min-h-screen bg-gray-50 overflow-hidden">
+    <div className="min-h-screen bg-white overflow-hidden">
       <div className="flex h-screen">
         <Sidebar activeTool={activeTool} setActiveTool={setActiveTool} />
 
@@ -37,7 +38,7 @@ function App() {
           >
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
-              <h1 className="text-xl font-semibold text-gray-900">
+              <h1 className="text-xl font-semibold text-black">
                 {activeTool === 'heic2jpg'
                   ? 'HEIC to JPG Converter'
                   : activeTool === 'textcounter'
@@ -63,7 +64,7 @@ function App() {
             </div>
 
             {/* Content Card */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <Card>
               {activeTool === 'heic2jpg' ? (
                 <HeicToJpgConverter />
               ) : activeTool === 'textcounter' ? (
@@ -81,7 +82,7 @@ function App() {
               ) : activeTool === 'tokenrate' ? (
                 <TokenProductionRateDemo />
               ) : null}
-            </div>
+            </Card>
           </div>
         </div>
       </div>

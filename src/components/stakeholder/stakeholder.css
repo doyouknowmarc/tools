@@ -1,6 +1,6 @@
 .app-container {
-  background-color: #f9fafb;
-  color: #111827;
+  background-color: #ffffff;
+  color: #000000;
   height: 100%;
   width: 100%;
   display: flex;
@@ -18,7 +18,7 @@
   bottom: 1rem;
   right: 1rem;
   padding: 0.5rem 1.5rem;
-  background-color: #16a34a;
+  background-color: #000000;
   border-radius: 6px;
   font-weight: 600;
   color: white;
@@ -28,7 +28,7 @@
 }
 
 .export-button:hover {
-  background-color: #22c55e;
+  background-color: #333333;
 }
 
 .matrix-row {
@@ -153,9 +153,9 @@
   background-clip: padding-box;
 }
 
-.draggable-box {
-  background-color: #3b82f6;
-  color: white;
+  .draggable-box {
+    background-color: #000000;
+    color: white;
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -262,8 +262,8 @@
   width: 3rem;
   height: 3rem;
   border-radius: 9999px;
-  background-color: #3b82f6;
-  color: white;
+    background-color: #000000;
+    color: white;
   font-size: 1.5rem;
   display: flex;
   align-items: center;
@@ -274,5 +274,5 @@
 }
 
 .add-card-button:hover {
-  background-color: #60a5fa;
+  background-color: #333333;
 }

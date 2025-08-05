@@ -3,6 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import heic2any from 'heic2any';
 import { FileImage, Download, Trash } from 'lucide-react';
 import clsx from 'clsx';
+import Button from './ui/Button';
 
 export default function HeicToJpgConverter() {
   const [activeTab, setActiveTab] = useState('upload');
@@ -129,20 +130,20 @@ export default function HeicToJpgConverter() {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Drop your HEIC files here
             </label>
-            <div 
-              {...getRootProps()} 
-              className={clsx(
-                "border-2 border-dashed rounded-lg p-8 cursor-pointer",
-                isDragActive ? "border-rose-400 bg-rose-50" : "border-gray-200"
-              )}
-            >
+              <div
+                {...getRootProps()}
+                className={clsx(
+                  "border-2 border-dashed rounded-lg p-8 cursor-pointer",
+                  isDragActive ? "border-black bg-gray-50" : "border-black"
+                )}
+              >
               <input {...getInputProps()} accept=".heic,image/heic,image/heif" />
               <div className="text-center">
                 <FileImage className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-500">
-                  {isDragActive ? "Drop the files here" : "Click or drag and drop to upload HEIC files"}
-                </p>
-                <button className="text-rose-500 text-sm mt-2">Browse Files</button>
+                  <p className="text-sm text-gray-500">
+                    {isDragActive ? "Drop the files here" : "Click or drag and drop to upload HEIC files"}
+                  </p>
+                  <button className="text-black text-sm mt-2">Browse Files</button>
               </div>
             </div>
           </div>
@@ -159,20 +160,20 @@ export default function HeicToJpgConverter() {
                       <span className="text-sm text-gray-700">{file.name}</span>
                     </div>
                     <div className="flex items-center">
-                      {processingFiles.includes(index) && (
-                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full mr-2 animate-pulse">
-                          Processing...
-                        </span>
-                      )}
-                      {processedFiles.includes(index) && (
-                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full mr-2">
-                          Done
-                        </span>
-                      )}
+                        {processingFiles.includes(index) && (
+                          <span className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded-full mr-2 animate-pulse">
+                            Processing...
+                          </span>
+                        )}
+                        {processedFiles.includes(index) && (
+                          <span className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded-full mr-2">
+                            Done
+                          </span>
+                        )}
                       <button 
                         onClick={() => removeUploadedFile(index)}
-                        className="text-gray-400 hover:text-red-500"
-                      >
+                          className="text-gray-400 hover:text-black"
+                        >
                         <Trash className="w-4 h-4" />
                       </button>
                     </div>
@@ -183,13 +184,13 @@ export default function HeicToJpgConverter() {
           )}
 
           {/* Convert Button */}
-          <button 
-            className="w-full bg-rose-400 text-white py-3 rounded-lg hover:bg-rose-500 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-            onClick={convertFiles}
-            disabled={uploadedFiles.length === 0 || isConverting}
-          >
-            {isConverting ? "Converting..." : "Convert to JPG"}
-          </button>
+            <Button
+              className="w-full"
+              onClick={convertFiles}
+              disabled={uploadedFiles.length === 0 || isConverting}
+            >
+              {isConverting ? "Converting..." : "Convert to JPG"}
+            </Button>
         </>
       ) : (
         <>
@@ -204,33 +205,30 @@ export default function HeicToJpgConverter() {
                       <span className="text-sm text-gray-700">{file.name}</span>
                     </div>
                     <div className="flex space-x-2">
-                      <button 
-                        onClick={() => downloadFile(file)}
-                        className="text-gray-400 hover:text-blue-500"
-                      >
-                        <Download className="w-4 h-4" />
-                      </button>
-                      <button 
-                        onClick={() => removeConvertedFile(index)}
-                        className="text-gray-400 hover:text-red-500"
-                      >
-                        <Trash className="w-4 h-4" />
-                      </button>
+                        <button
+                          onClick={() => downloadFile(file)}
+                          className="text-gray-400 hover:text-black"
+                        >
+                          <Download className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => removeConvertedFile(index)}
+                          className="text-gray-400 hover:text-black"
+                        >
+                          <Trash className="w-4 h-4" />
+                        </button>
                     </div>
                   </div>
                 ))}
               </div>
               
               {/* Download All Button */}
-              <div className="mt-6 flex justify-center">
-                <button 
-                  onClick={downloadAllFiles}
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 shadow-md transition-colors"
-                >
-                  <Download className="w-4 h-4" />
-                  <span>Download All</span>
-                </button>
-              </div>
+                <div className="mt-6 flex justify-center">
+                  <Button onClick={downloadAllFiles} className="flex items-center space-x-2 shadow-md">
+                    <Download className="w-4 h-4" />
+                    <span>Download All</span>
+                  </Button>
+                </div>
             </>
           ) : (
             <div className="text-center py-8">

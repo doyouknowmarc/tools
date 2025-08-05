@@ -60,7 +60,7 @@ export default function PomodoroTimer() {
     <div className="flex flex-col h-full items-center justify-center space-y-8">
       <div className="flex space-x-4 mb-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Work Duration (min)</label>
+          <label className="block text-sm font-medium text-black mb-1">Work Duration (min)</label>
           <input
             type="number"
             min="1"
@@ -71,7 +71,7 @@ export default function PomodoroTimer() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Break Duration (min)</label>
+          <label className="block text-sm font-medium text-black mb-1">Break Duration (min)</label>
           <input
             type="number"
             min="1"
@@ -83,10 +83,10 @@ export default function PomodoroTimer() {
         </div>
       </div>
       <div className="text-center">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+        <h2 className="text-2xl font-semibold text-black mb-2">
           {isWorkTime ? 'Work Time' : 'Break Time'}
         </h2>
-        <div className="text-6xl font-bold text-gray-800 mb-8">
+        <div className="text-6xl font-bold text-black mb-8">
           {formatTime(timeLeft)}
         </div>
       </div>
@@ -94,7 +94,7 @@ export default function PomodoroTimer() {
       <div className="flex space-x-4">
         <button
           onClick={handleStartPause}
-          className="flex items-center space-x-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+          className="flex items-center space-x-2 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
         >
           {isRunning ? (
             <>

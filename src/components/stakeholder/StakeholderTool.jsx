@@ -68,14 +68,14 @@ export default function StakeholderTool() {
         <button
           type="button"
           onClick={() => addCard(1)}
-          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-md transition-colors"
+          className="btn shadow-md"
         >
           +
         </button>
         <button
           type="button"
           onClick={handleExport}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md transition-colors"
+          className="btn shadow-md"
         >
           Export as PNG
         </button>
