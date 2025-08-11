@@ -122,7 +122,7 @@ const RAGTokenCalculator = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div className=" p-6  min-h-screen">
       <div className="mb-8 text-center">
         <div className="flex items-center justify-center gap-3 mb-4">
           <Calculator className="w-8 h-8 text-blue-600" />
@@ -132,6 +132,7 @@ const RAGTokenCalculator = () => {
           Calculate precise token usage and costs for each step of your RAG pipeline: retrieval, re-ranking, and generation.
         </p>
       </div>
+    
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-1 space-y-6">
