@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { Calculator, DollarSign, Search, Layers, Zap, BarChart3, ArrowRight } from 'lucide-react';
-import Card from './ui/Card';
 
 const RAGTokenCalculator = () => {
   const [scenario, setScenario] = useState('medium');
@@ -123,10 +122,10 @@ const RAGTokenCalculator = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-7xl mx-auto p-6 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
       <div className="mb-8 text-center">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <Calculator className="w-8 h-8 text-primary-600" />
+          <Calculator className="w-8 h-8 text-blue-600" />
           <h1 className="text-3xl font-bold text-gray-800">RAG Pipeline Token & Cost Calculator</h1>
         </div>
         <p className="text-gray-600 max-w-3xl mx-auto">
@@ -136,9 +135,9 @@ const RAGTokenCalculator = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-1 space-y-6">
-          <Card>
+          <div className="bg-white rounded-xl shadow-lg p-6">
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <Layers className="w-5 h-5 text-primary-600" />
+              <Layers className="w-5 h-5 text-blue-600" />
               Scenario
             </h2>
 
@@ -158,8 +157,8 @@ const RAGTokenCalculator = () => {
                     htmlFor={key}
                     className={`block p-3 border-2 rounded-lg cursor-pointer transition-all ${
                       scenario === key
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-gray-200 hover:border-primary-300'
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-blue-300'
                     }`}
                   >
                     <div className="font-medium capitalize text-gray-800 text-sm">{key}</div>
@@ -182,8 +181,8 @@ const RAGTokenCalculator = () => {
                   htmlFor="custom"
                   className={`block p-3 border-2 rounded-lg cursor-pointer transition-all ${
                     scenario === 'custom'
-                      ? 'border-primary-500 bg-primary-50'
-                      : 'border-gray-200 hover:border-primary-300'
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 hover:border-blue-300'
                   }`}
                 >
                   <div className="font-medium text-gray-800 text-sm">Custom</div>
@@ -203,7 +202,7 @@ const RAGTokenCalculator = () => {
                       type="number"
                       value={customValues.userQuery}
                       onChange={(e) => handleCustomChange('userQuery', e.target.value)}
-                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <div className="text-xs text-gray-500 mt-1">
                       Length of user's question/input. Used in Steps 3 & 5. Priced as input tokens.
@@ -216,7 +215,7 @@ const RAGTokenCalculator = () => {
                       type="number"
                       value={customValues.chunkSize}
                       onChange={(e) => handleCustomChange('chunkSize', e.target.value)}
-                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <div className="text-xs text-gray-500 mt-1">
                       Average tokens per document chunk. Multiplied by N chunks for reranking, by Top-K for final RAG.
@@ -229,7 +228,7 @@ const RAGTokenCalculator = () => {
                       type="number"
                       value={customValues.numChunks}
                       onChange={(e) => handleCustomChange('numChunks', e.target.value)}
-                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <div className="text-xs text-gray-500 mt-1">
                       Total chunks from vector search sent to reranker. Used in Step 3 reranking prompt (input cost).
@@ -242,7 +241,7 @@ const RAGTokenCalculator = () => {
                       type="number"
                       value={customValues.topKChunks}
                       onChange={(e) => handleCustomChange('topKChunks', e.target.value)}
-                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <div className="text-xs text-gray-500 mt-1">
                       Best chunks selected by reranker for final answer. Used in Step 5 RAG prompt (input cost).
@@ -255,7 +254,7 @@ const RAGTokenCalculator = () => {
                       type="number"
                       value={customValues.reRankOverhead}
                       onChange={(e) => handleCustomChange('reRankOverhead', e.target.value)}
-                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <div className="text-xs text-gray-500 mt-1">
                       Reranking system prompt and instructions. Added to Step 3 reranking prompt (input cost).
@@ -268,7 +267,7 @@ const RAGTokenCalculator = () => {
                       type="number"
                       value={customValues.reRankOutputTokens}
                       onChange={(e) => handleCustomChange('reRankOutputTokens', e.target.value)}
-                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <div className="text-xs text-gray-500 mt-1">
                       Reranker's response with top-K chunk IDs/scores. Step 4 output (output cost).
@@ -281,7 +280,7 @@ const RAGTokenCalculator = () => {
                       type="number"
                       value={customValues.ragSystemPrompt}
                       onChange={(e) => handleCustomChange('ragSystemPrompt', e.target.value)}
-                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <div className="text-xs text-gray-500 mt-1">
                       Instructions for final answer generation. Added to Step 5 RAG prompt (input cost).
@@ -294,7 +293,7 @@ const RAGTokenCalculator = () => {
                       type="number"
                       value={customValues.finalAnswerTokens}
                       onChange={(e) => handleCustomChange('finalAnswerTokens', e.target.value)}
-                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <div className="text-xs text-gray-500 mt-1">
                       Length of generated response to user. Step 6 output (output cost).
@@ -317,7 +316,7 @@ const RAGTokenCalculator = () => {
                     step="0.01"
                     value={customValues.inputTokenPrice}
                     onChange={(e) => handleCustomChange('inputTokenPrice', e.target.value)}
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <div className="text-xs text-gray-500 mt-1">
                     Cost per million input tokens. Applied to Steps 3 & 5 (reranking and RAG prompts).
@@ -330,7 +329,7 @@ const RAGTokenCalculator = () => {
                     step="0.01"
                     value={customValues.outputTokenPrice}
                     onChange={(e) => handleCustomChange('outputTokenPrice', e.target.value)}
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <div className="text-xs text-gray-500 mt-1">
                     Cost per million output tokens. Applied to Steps 4 & 6 (reranker response and final answer).
@@ -338,27 +337,27 @@ const RAGTokenCalculator = () => {
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
 
         <div className="lg:col-span-3 space-y-6">
-          <Card>
+          <div className="bg-white rounded-xl shadow-lg p-6">
             <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
               <Zap className="w-5 h-5 text-green-600" />
               RAG Pipeline Steps & Costs
             </h2>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-primary-50 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                  <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
                   <div>
                     <span className="font-medium">User Query Input</span>
                     <div className="text-sm text-gray-600">Initial query from user</div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-lg font-semibold text-primary-600">{calculations.step1_Query.toLocaleString()} tokens</div>
+                  <div className="text-lg font-semibold text-blue-600">{calculations.step1_Query.toLocaleString()} tokens</div>
                   <div className="text-sm text-gray-500">No cost (stored)</div>
                 </div>
               </div>
@@ -433,51 +432,51 @@ const RAGTokenCalculator = () => {
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
-            <h3 className="text-lg font-semibold mb-4 text-gray-800">Token Summary</h3>
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Total Input Tokens:</span>
-                <span className="font-semibold">{calculations.totalInputTokens.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Total Output Tokens:</span>
-                <span className="font-semibold">{calculations.totalOutputTokens.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between pt-2 border-t">
-                <span className="text-gray-800 font-medium">Total Tokens:</span>
-                <span className="font-bold text-lg">{calculations.totalTokens.toLocaleString()}</span>
-              </div>
-            </div>
-          </Card>
-
-          <Card>
-            <h3 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-green-600" />
-              Cost Breakdown
-            </h3>
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Input Costs (Steps 3+5):</span>
-                <span className="font-semibold">${calculations.totalInputCost.toFixed(6)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Output Costs (Steps 4+6):</span>
-                <span className="font-semibold">${calculations.totalOutputCost.toFixed(6)}</span>
-              </div>
-              <div className="flex justify-between pt-2 border-t">
-                <span className="text-gray-800 font-medium">Total Cost per Query:</span>
-                <span className="font-bold text-lg text-green-600">${calculations.totalCost.toFixed(6)}</span>
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-lg font-semibold mb-4 text-gray-800">Token Summary</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Total Input Tokens:</span>
+                  <span className="font-semibold">{calculations.totalInputTokens.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Total Output Tokens:</span>
+                  <span className="font-semibold">{calculations.totalOutputTokens.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between pt-2 border-t">
+                  <span className="text-gray-800 font-medium">Total Tokens:</span>
+                  <span className="font-bold text-lg">{calculations.totalTokens.toLocaleString()}</span>
+                </div>
               </div>
             </div>
-          </Card>
-        </div>
 
-        <Card>
-          <h3 className="text-lg font-semibold mb-4 text-gray-800">Volume Projections</h3>
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                <DollarSign className="w-5 h-5 text-green-600" />
+                Cost Breakdown
+              </h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Input Costs (Steps 3+5):</span>
+                  <span className="font-semibold">${calculations.totalInputCost.toFixed(6)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Output Costs (Steps 4+6):</span>
+                  <span className="font-semibold">${calculations.totalOutputCost.toFixed(6)}</span>
+                </div>
+                <div className="flex justify-between pt-2 border-t">
+                  <span className="text-gray-800 font-medium">Total Cost per Query:</span>
+                  <span className="font-bold text-lg text-green-600">${calculations.totalCost.toFixed(6)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h3 className="text-lg font-semibold mb-4 text-gray-800">Volume Projections</h3>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {[
                 { queries: 100, period: '100 queries' },
@@ -487,7 +486,7 @@ const RAGTokenCalculator = () => {
               ].map(({ queries, period }) => (
                 <div key={queries} className="p-4 bg-gray-50 rounded-lg text-center">
                   <div className="text-sm text-gray-600 mb-1">{period}</div>
-                  <div className="text-xl font-bold text-primary-600">
+                  <div className="text-xl font-bold text-blue-600">
                     ${(calculations.totalCost * queries).toFixed(2)}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">
@@ -496,7 +495,7 @@ const RAGTokenCalculator = () => {
                 </div>
               ))}
             </div>
-          </Card>
+          </div>
         </div>
       </div>
     </div>
