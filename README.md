@@ -1,8 +1,10 @@
-# Multi-Tool Web Application
+# Multi-Tool Web App
 
-A collection of useful web-based tools including a HEIC to JPG converter, text counter, and Pomodoro timer. All tools run locally in your browser without requiring server uploads.
+A collection of useful web-based tools that run locally in your browser without requiring server uploads.
 
 ## Features
+
+This application includes the following tools:
 
 ### HEIC to JPG Converter
 - 🖼️ Convert HEIC/HEIF images to JPG format
@@ -12,7 +14,6 @@ A collection of useful web-based tools including a HEIC to JPG converter, text c
 ### Text Counter
 - 📝 Count characters, words, and sentences in text
 - 📊 Real-time statistics as you type
-- 🔍 Detailed breakdown of text metrics
 
 ### Pomodoro Timer
 - ⏱️ Customizable work and break durations
@@ -23,15 +24,33 @@ A collection of useful web-based tools including a HEIC to JPG converter, text c
 - 🌐 Display your current public IP address
 - 🔄 Refresh the value with a single click
 
+### Stakeholder Matrix
+- 🗺️ Map and manage project stakeholders
+- 📥 Export matrix as an image
+
+### Document OCR
+- 📄 Extract text from images and PDF documents
+- 🔍 Supports multiple languages
+
+### RAG Token Calculator
+- 🧮 Calculate tokens for Retrieval-Augmented Generation models
+- 📈 Estimate costs for different models
+
+### Token Production Rate Demo
+- 🚀 Demonstrates token production rates for various models
+- 📊 Compare real-time performance
+
 ## Technology Stack
 
 - React.js for the UI
 - Vite as the build tool
 - TailwindCSS for styling
-- heic2any for HEIC conversion
-- react-dropzone for file uploads
+- `heic2any` for HEIC conversion
+- `react-dropzone` for file uploads
+- `tesseract.js` for OCR
+- `pdf-lib` for PDF manipulation
 
-## Development
+## Getting Started
 
 ### Prerequisites
 
@@ -42,8 +61,8 @@ A collection of useful web-based tools including a HEIC to JPG converter, text c
 
 ```bash
 # Clone the repository
-git clone https://github.com/doyouknowmarc/tools.git
-cd tools
+git clone <repository-url>
+cd <project-directory>
 
 # Install dependencies
 npm install
@@ -51,6 +70,7 @@ npm install
 # Start development server
 npm run dev
 ```
+The application will be available at `http://localhost:5173`.
 
 ### Build for Production
 
@@ -64,24 +84,11 @@ npm run build
 npm run preview
 ```
 
-## Deployment to GitHub Pages
+## Deployment
 
-This project is configured for easy deployment to GitHub Pages. Follow these steps:
+This project can be deployed to any static site hosting service, including GitHub Pages.
 
-1. Create a GitHub repository for this project
-
-2. Push your code to the GitHub repository:
-   ```bash
-   git remote add origin https://github.com/doyouknowmarc/tools.git
-   git branch -M main
-   git push -u origin main
-   ```
-
-3. GitHub Actions will automatically build and deploy your site to GitHub Pages whenever you push to the main branch
-
-4. Go to your repository settings > Pages to check the deployment status
-
-5. Your site will be available at: `https://doyouknowmarc.github.io/tools/`
+For GitHub Pages, you can use GitHub Actions to automate the build and deployment process. A typical workflow would build the project and deploy the `dist` directory to the `gh-pages` branch.
 
 ## Contributing
 
