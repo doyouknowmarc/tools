@@ -1,0 +1,9 @@
+Flask
+Werkzeug
+python-docx
+mammoth
+htmldiff2
+Genshi
+pypandoc
+pandoc
+gunicorn

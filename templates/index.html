@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Comparison</title>
+    <style>
+        /* --- General Page Styling (Consistent with result.html) --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #1c1e21;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* --- Container Card (Consistent with result.html) --- */
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border: 1px solid #dddfe2;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Header Styling (Consistent with result.html) --- */
+        .header {
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #333;
+        }
+
+        .header p {
+            margin: 10px 0 0;
+            color: #606770;
+        }
+
+        /* --- Form Specific Styling --- */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        /* Hide the default file input */
+        .form-group input[type="file"] {
+            display: none;
+        }
+
+        /* Style the custom file input button */
+        .file-input-label {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #e4e6eb;
+            color: #1c1e21;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .file-input-label:hover {
+            background-color: #d8dbdf;
+        }
+
+        /* Style for displaying the selected file name */
+        .file-name {
+            margin-left: 15px;
+            font-style: italic;
+            color: #606770;
+        }
+
+        /* --- Submit Button Styling --- */
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Document Comparison Tool</h1>
+            <p>Select the original and revised .docx files to see a visual diff between them. Upload your first version as the base document and your changed file as the revised version.</p>
+            <p style="font-size: 0.9em; color: #606770;">Support for uploading .pdf files will be available soon.</p>
+        </div>
+
+        <form action="/compare" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="base_file">Base Document (Version 1)</label>
+                <!-- This label acts as our custom button -->
+                <label for="base_file" class="file-input-label">Choose File...</label>
+                <input type="file" name="base_file" id="base_file" accept=".docx" required>
+                <!-- This span will show the selected file name -->
+                <span id="base-file-name" class="file-name">No file chosen</span>
+            </div>
+
+            <div class="form-group">
+                <label for="new_file">Revised Document (Version 2)</label>
+                <label for="new_file" class="file-input-label">Choose File...</label>
+                <input type="file" name="new_file" id="new_file" accept=".docx" required>
+                <span id="new-file-name" class="file-name">No file chosen</span>
+            </div>
+
+            <input type="submit" value="Compare Documents">
+        </form>
+    </div>
+
+    <!-- JavaScript to display the chosen file names -->
+    <script>
+        const baseFileInput = document.getElementById('base_file');
+        const newFileInput = document.getElementById('new_file');
+        const baseFileNameSpan = document.getElementById('base-file-name');
+        const newFileNameSpan = document.getElementById('new-file-name');
+
+        baseFileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                baseFileNameSpan.textContent = this.files[0].name;
+            } else {
+                baseFileNameSpan.textContent = 'No file chosen';
+            }
+        });
+
+        newFileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                newFileNameSpan.textContent = this.files[0].name;
+            } else {
+                newFileNameSpan.textContent = 'No file chosen';
+            }
+        });
+    </script>
+
+</body>
+</html>
