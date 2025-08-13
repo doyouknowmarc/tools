@@ -9,6 +9,7 @@ import StakeholderTool from './components/stakeholder/StakeholderTool';
 import OcrTool from './components/ocr/OcrTool';
 import RAGTokenCalculator from './components/RAGTokenCalculator';
 import TokenProductionRateDemo from './components/TokenProductionRateDemo';
+import LinkSaver from './components/LinkSaver';
 
 
 function App() {
@@ -54,6 +55,8 @@ function App() {
                   ? 'Document OCR'
                   : activeTool === 'tokenrate'
                   ? 'Token Production Rate Demo'
+                  : activeTool === 'linksaver'
+                  ? 'Link Saver'
                   : 'coming soon ..'}
               </h1>
               <div className="flex items-center space-x-4">
@@ -80,6 +83,8 @@ function App() {
                 <OcrTool />
               ) : activeTool === 'tokenrate' ? (
                 <TokenProductionRateDemo />
+              ) : activeTool === 'linksaver' ? (
+                <LinkSaver />
               ) : activeTool === 'comingsoon' ? (
                 <div className="text-center">
                   <button

@@ -23,6 +23,10 @@ A collection of useful web-based tools including a HEIC to JPG converter, text c
 - 🌐 Display your current public IP address
 - 🔄 Refresh the value with a single click
 
+### Link Saver
+- 🔖 Save links with descriptions and tags
+- 💾 Stores data locally in your browser
+
 ## Technology Stack
 
 - React.js for the UI
