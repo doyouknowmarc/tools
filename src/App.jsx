@@ -10,7 +10,6 @@ import OcrTool from './components/ocr/OcrTool';
 import RAGTokenCalculator from './components/RAGTokenCalculator';
 import TokenProductionRateDemo from './components/TokenProductionRateDemo';
 import TextConverter from './components/TextConverter';
-import AsciiConverter from './components/AsciiConverter';
 
 
 function App() {
@@ -31,7 +30,7 @@ function App() {
             className={
               clsx(
                 'mx-auto',
-                activeTool === 'stakeholders' || activeTool === 'ragcalc' || activeTool === 'ascii'
+                activeTool === 'stakeholders' || activeTool === 'ragcalc'
                   ? 'w-full max-w-none'
                   : 'max-w-4xl'
               )
@@ -58,8 +57,6 @@ function App() {
                   ? 'Document OCR'
                   : activeTool === 'tokenrate'
                   ? 'Token Production Rate Demo'
-                  : activeTool === 'ascii'
-                  ? 'ASCII Art Converter'
                   : 'coming soon ..'}
               </h1>
               <div className="flex items-center space-x-4">
@@ -88,8 +85,6 @@ function App() {
                 <OcrTool />
               ) : activeTool === 'tokenrate' ? (
                 <TokenProductionRateDemo />
-              ) : activeTool === 'ascii' ? (
-                <AsciiConverter />
               ) : activeTool === 'comingsoon' ? (
                 <div className="text-center">
                   <button
