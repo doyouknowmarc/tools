@@ -8,7 +8,8 @@ import {
   Globe,
   ScanText,
   Calculator,
-  Activity
+  Activity,
+  BookmarkPlus
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -118,8 +119,21 @@ function Sidebar({ activeTool, setActiveTool }) {
               <span className="font-medium">Token Rate Demo</span>
             </button>
 
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'linksaver'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50",
+              )}
+              onClick={() => setActiveTool('linksaver')}
+            >
+              <BookmarkPlus className="w-5 h-5" />
+              <span className="font-medium">Link Saver</span>
+            </button>
 
-            <button 
+
+            <button
               className={clsx(
                 "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
                 activeTool === 'comingsoon' 

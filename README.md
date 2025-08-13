@@ -1,6 +1,6 @@
 # Multi-Tool Web Application
 
-A collection of useful web-based tools including a HEIC to JPG converter, text counter, and Pomodoro timer. All tools run locally in your browser without requiring server uploads.
+A collection of useful web-based tools including a HEIC to JPG converter, text counter, and Pomodoro timer. Most tools run locally in your browser without requiring server uploads. The Link Saver uses a tiny backend server to persist data to a JSON file.
 
 ## Features
 
@@ -22,6 +22,10 @@ A collection of useful web-based tools including a HEIC to JPG converter, text c
 ### Public IP Address
 - 🌐 Display your current public IP address
 - 🔄 Refresh the value with a single click
+
+### Link Saver
+- 🔖 Save links with descriptions and tags
+- 💾 Persists data to a `links.json` file via a backend server
 
 ## Technology Stack
 
@@ -50,6 +54,9 @@ npm install
 
 # Start development server
 npm run dev
+
+# Start link storage server
+npm run server
 ```
 
 ### Build for Production
