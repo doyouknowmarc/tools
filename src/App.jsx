@@ -80,6 +80,18 @@ function App() {
                 <OcrTool />
               ) : activeTool === 'tokenrate' ? (
                 <TokenProductionRateDemo />
+              ) : activeTool === 'comingsoon' ? (
+                <div className="text-center">
+                  <button
+                    className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
+                    onClick={() =>
+                      (window.location.href =
+                        'mailto:doyouknowmarc@mail.com?subject=I%20suggest%20the%20following%20feature%20bla%20bla%20bla')
+                    }
+                  >
+                    Suggest a Feature
+                  </button>
+                </div>
               ) : null}
             </div>
           </div>
