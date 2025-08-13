@@ -9,6 +9,7 @@ import StakeholderTool from './components/stakeholder/StakeholderTool';
 import OcrTool from './components/ocr/OcrTool';
 import RAGTokenCalculator from './components/RAGTokenCalculator';
 import TokenProductionRateDemo from './components/TokenProductionRateDemo';
+import TextConverter from './components/TextConverter';
 
 
 function App() {
@@ -42,6 +43,8 @@ function App() {
                   ? 'HEIC to JPG Converter'
                   : activeTool === 'textcounter'
                   ? 'Text Counter'
+                  : activeTool === 'converter'
+                  ? 'Text Converter'
                   : activeTool === 'pomodoro'
                   ? 'Pomodoro Timer'
                   : activeTool === 'ipaddress'
@@ -68,6 +71,8 @@ function App() {
                 <HeicToJpgConverter />
               ) : activeTool === 'textcounter' ? (
                 <TextCounter />
+              ) : activeTool === 'converter' ? (
+                <TextConverter />
               ) : activeTool === 'pomodoro' ? (
                 <PomodoroTimer />
               ) : activeTool === 'ipaddress' ? (
