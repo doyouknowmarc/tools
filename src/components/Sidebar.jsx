@@ -9,7 +9,8 @@ import {
   ScanText,
   Calculator,
   Activity,
-  RefreshCw
+  RefreshCw,
+  Database
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -129,6 +130,19 @@ function Sidebar({ activeTool, setActiveTool }) {
             >
               <Activity className="w-5 h-5" />
               <span className="font-medium">Token Rate Demo</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'esramcalc'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50",
+              )}
+              onClick={() => setActiveTool('esramcalc')}
+            >
+              <Database className="w-5 h-5" />
+              <span className="font-medium">ES RAM Calculator</span>
             </button>
 
 
