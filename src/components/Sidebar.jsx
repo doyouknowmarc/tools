@@ -96,6 +96,19 @@ function Sidebar({ activeTool, setActiveTool }) {
             <button
               className={clsx(
                 "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'mailtolink'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setActiveTool('mailtolink')}
+            >
+              <Mail className="w-5 h-5" />
+              <span className="font-medium">Mailto Link</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
                 activeTool === 'ocr'
                   ? "bg-gray-900 text-white hover:bg-gray-800"
                   : "text-gray-600 hover:bg-gray-50"
