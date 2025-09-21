@@ -11,6 +11,7 @@ import RAGTokenCalculator from './components/RAGTokenCalculator';
 import TokenProductionRateDemo from './components/TokenProductionRateDemo';
 import TextConverter from './components/TextConverter';
 import ElasticSearchRamCalculator from './components/ElasticSearchRamCalculator';
+import MailtoLinkGenerator from './components/MailtoLinkGenerator';
 
 
 function App() {
@@ -60,6 +61,8 @@ function App() {
                   ? 'Token Production Rate Demo'
                   : activeTool === 'esramcalc'
                   ? 'ES RAM Calculator'
+                  : activeTool === 'mailtolink'
+                  ? 'Mailto Link Generator'
                   : 'coming soon ..'}
               </h1>
               <div className="flex items-center space-x-4">
@@ -90,6 +93,8 @@ function App() {
                 <TokenProductionRateDemo />
               ) : activeTool === 'esramcalc' ? (
                 <ElasticSearchRamCalculator />
+              ) : activeTool === 'mailtolink' ? (
+                <MailtoLinkGenerator />
               ) : activeTool === 'comingsoon' ? (
                 <div className="text-center">
                   <button
