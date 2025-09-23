@@ -41,7 +41,7 @@ const QrCodeGenerator = () => {
       return;
     }
 
-    setUrls(parsedUrls.filter((item) => validateUrl(item)));
+    qrCanvasRefs.current = {};
   };
 
   const handleDownload = (index, url) => {
@@ -110,7 +110,9 @@ const QrCodeGenerator = () => {
                 includeMargin
                 ref={(node) => {
                   if (node) {
-                    qrCanvasRefs.current[index] = node.canvasRef.current;
+                    qrCanvasRefs.current[index] = node;
+                  } else {
+                    delete qrCanvasRefs.current[index];
                   }
                 }}
               />
