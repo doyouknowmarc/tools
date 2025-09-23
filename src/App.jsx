@@ -12,6 +12,7 @@ import TokenProductionRateDemo from './components/TokenProductionRateDemo';
 import TextConverter from './components/TextConverter';
 import ElasticSearchRamCalculator from './components/ElasticSearchRamCalculator';
 import MailtoLinkGenerator from './components/MailtoLinkGenerator';
+import QrCodeGenerator from './components/QrCodeGenerator';
 
 
 function App() {
@@ -63,6 +64,8 @@ function App() {
                   ? 'ES RAM Calculator'
                   : activeTool === 'mailtolink'
                   ? 'Mailto Link Generator'
+                  : activeTool === 'qrcode'
+                  ? 'QR Code Generator'
                   : 'coming soon ..'}
               </h1>
               <div className="flex items-center space-x-4">
@@ -95,6 +98,8 @@ function App() {
                 <ElasticSearchRamCalculator />
               ) : activeTool === 'mailtolink' ? (
                 <MailtoLinkGenerator />
+              ) : activeTool === 'qrcode' ? (
+                <QrCodeGenerator />
               ) : activeTool === 'comingsoon' ? (
                 <div className="text-center">
                   <button

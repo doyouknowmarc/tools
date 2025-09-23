@@ -10,7 +10,8 @@ import {
   Calculator,
   Activity,
   RefreshCw,
-  Database
+  Database,
+  QrCode
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -104,6 +105,19 @@ function Sidebar({ activeTool, setActiveTool }) {
             >
               <Mail className="w-5 h-5" />
               <span className="font-medium">Mailto Link</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'qrcode'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setActiveTool('qrcode')}
+            >
+              <QrCode className="w-5 h-5" />
+              <span className="font-medium">QR Codes</span>
             </button>
 
             <button
