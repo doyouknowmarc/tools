@@ -42,7 +42,6 @@ const QrCodeGenerator = () => {
     }
 
     qrCanvasRefs.current = {};
-    setUrls(parsedUrls.filter((item) => validateUrl(item)));
   };
 
   const handleDownload = (index, url) => {
