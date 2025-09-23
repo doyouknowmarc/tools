@@ -33,6 +33,7 @@ const QrCodeGenerator = () => {
   const handleGenerate = () => {
     const parsedUrls = sanitizeUrls(inputValue);
     const invalid = parsedUrls.filter((item) => !validateUrl(item));
+    const validUrls = parsedUrls.filter(validateUrl);
 
     setInvalidUrls(invalid);
 
@@ -41,6 +42,7 @@ const QrCodeGenerator = () => {
       return;
     }
 
+    setUrls(validUrls);
     qrCanvasRefs.current = {};
   };
 
