@@ -100,7 +100,13 @@ The Tone Adjuster and Meeting Prep Assistant can call a locally running [Ollama]
    OLLAMA_ORIGINS="http://localhost:5173" \
    ollama serve
    ```
-
+   
+   Copy Paste Example:
+   ```bash
+   OLLAMA_HOST=0.0.0.0:11434 OLLAMA_ORIGINS="https://doyouknowmarc.github.io" \
+   ollama serve
+   ```
+   
    If you run the dev server on another port (or deploy the app), add that origin to the `OLLAMA_ORIGINS` list. You can also make the change permanent by adding the values to `~/.ollama/config`:
 
    ```toml
@@ -114,7 +120,7 @@ The Tone Adjuster and Meeting Prep Assistant can call a locally running [Ollama]
 
    Restart Ollama after updating the configuration file.
 
-2. **Verify the API is reachable**:
+3. **Verify the API is reachable**:
 
    ```bash
    curl http://localhost:11434/api/tags
@@ -122,7 +128,7 @@ The Tone Adjuster and Meeting Prep Assistant can call a locally running [Ollama]
 
    The response should list the available models.
 
-3. **Load models inside the app** by entering the base URL (for example `http://localhost:11434`) in the Tone Adjuster or Meeting Prep panels and clicking **Refresh models**. Once connected, choose a model and trigger the rewrite/drafting buttons to call Ollama.
+4. **Load models inside the app** by entering the base URL (for example `http://localhost:11434`) in the Tone Adjuster or Meeting Prep panels and clicking **Refresh models**. Once connected, choose a model and trigger the rewrite/drafting buttons to call Ollama.
 
 ## Deployment to GitHub Pages
 
