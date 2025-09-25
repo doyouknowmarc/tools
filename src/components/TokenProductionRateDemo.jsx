@@ -115,7 +115,7 @@ export default function TokenProductionRateDemo() {
         <h2 className="text-2xl font-bold border-b-2 border-black pb-4">Token Production Rate Demo</h2>
       </div>
 
-      <div className="border-2 border-black p-6 bg-gray-50">
+      <div className="border-2 border-black bg-gray-50 p-4 sm:p-6">
         <h3 className="font-bold mb-4">📖 Human Reading Speed Reference</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
@@ -131,7 +131,7 @@ export default function TokenProductionRateDemo() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-2 border-black p-6">
+      <div className="grid grid-cols-1 gap-8 border-2 border-black p-4 sm:p-6 md:grid-cols-2">
         <div>
           <label htmlFor="textLength" className="block text-xs font-bold uppercase tracking-wide mb-2">
             Text Length: <span>{textLength}</span> words
@@ -187,14 +187,14 @@ export default function TokenProductionRateDemo() {
         </button>
       </div>
 
-      <div className="bg-black text-white p-6 border-2 border-black min-h-[300px] text-sm leading-relaxed overflow-y-auto">
+      <div className="min-h-[300px] border-2 border-black bg-black p-4 text-sm leading-relaxed text-white overflow-y-auto sm:p-6">
         {outputTokens.map((t, i) => (
           <span key={i}>{(i > 0 ? ' ' : '') + t}</span>
         ))}
         {isGenerating && <span className="bg-white text-black px-1 ml-1 animate-pulse">|</span>}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
         <div className="border-2 border-black p-4 text-center">
           <div className="text-xl font-bold mb-1">{tokensGenerated}</div>
           <div className="text-xs uppercase tracking-wide">Tokens Generated</div>

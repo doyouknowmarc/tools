@@ -122,13 +122,13 @@ const RAGTokenCalculator = () => {
   };
 
   return (
-    <div className=" p-6  min-h-screen">
+    <div className="p-4 sm:p-6 min-h-screen">
       <div className="mb-8 text-center">
         <div className="flex items-center justify-center gap-3 mb-4">
           <Calculator className="w-8 h-8 text-blue-600" />
-          <h1 className="text-3xl font-bold text-gray-800">RAG Pipeline Token & Cost Calculator</h1>
+          <h1 className="text-2xl font-bold text-gray-800 sm:text-3xl">RAG Pipeline Token & Cost Calculator</h1>
         </div>
-        <p className="text-gray-600 max-w-3xl mx-auto">
+        <p className="mx-auto max-w-3xl text-base text-gray-600 sm:text-lg">
           Calculate precise token usage and costs for each step of your RAG pipeline: retrieval, re-ranking, and generation.
         </p>
       </div>
@@ -136,7 +136,7 @@ const RAGTokenCalculator = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="rounded-xl bg-white p-6 shadow-lg">
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <Layers className="w-5 h-5 text-blue-600" />
               Scenario
@@ -342,14 +342,14 @@ const RAGTokenCalculator = () => {
         </div>
 
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="rounded-xl bg-white p-6 shadow-lg">
             <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
               <Zap className="w-5 h-5 text-green-600" />
               RAG Pipeline Steps & Costs
             </h2>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+              <div className="flex flex-col gap-4 rounded-lg bg-blue-50 p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
                   <div>
@@ -357,13 +357,13 @@ const RAGTokenCalculator = () => {
                     <div className="text-sm text-gray-600">Initial query from user</div>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-left sm:text-right">
                   <div className="text-lg font-semibold text-blue-600">{calculations.step1_Query.toLocaleString()} tokens</div>
                   <div className="text-sm text-gray-500">No cost (stored)</div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div className="flex flex-col gap-4 rounded-lg bg-gray-50 p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-gray-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
                   <div>
@@ -371,13 +371,13 @@ const RAGTokenCalculator = () => {
                     <div className="text-sm text-gray-600">Vector search retrieves candidate chunks</div>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-left sm:text-right">
                   <div className="text-lg font-semibold text-gray-600">{calculations.step2_ChunksN.toLocaleString()} tokens</div>
                   <div className="text-sm text-gray-500">No cost (retrieval)</div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-lg">
+              <div className="flex flex-col gap-4 rounded-lg bg-yellow-50 p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-yellow-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
                   <div>
@@ -385,13 +385,13 @@ const RAGTokenCalculator = () => {
                     <div className="text-sm text-gray-600">Query + All chunks + instructions</div>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-left sm:text-right">
                   <div className="text-lg font-semibold text-yellow-600">{calculations.step3_PromptRerank.toLocaleString()} tokens</div>
                   <div className="text-sm text-green-600 font-medium">${calculations.step3_Cost.toFixed(6)} (input)</div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-orange-50 rounded-lg">
+              <div className="flex flex-col gap-4 rounded-lg bg-orange-50 p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
                   <div>
@@ -399,13 +399,13 @@ const RAGTokenCalculator = () => {
                     <div className="text-sm text-gray-600">Top-K chunk IDs or rankings</div>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-left sm:text-right">
                   <div className="text-lg font-semibold text-orange-600">{calculations.step4_OutputRerank.toLocaleString()} tokens</div>
                   <div className="text-sm text-green-600 font-medium">${calculations.step4_Cost.toFixed(6)} (output)</div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+              <div className="flex flex-col gap-4 rounded-lg bg-green-50 p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">5</div>
                   <div>
@@ -413,13 +413,13 @@ const RAGTokenCalculator = () => {
                     <div className="text-sm text-gray-600">Query + Top-K chunks + system prompt</div>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-left sm:text-right">
                   <div className="text-lg font-semibold text-green-600">{calculations.step5_PromptRAG.toLocaleString()} tokens</div>
                   <div className="text-sm text-green-600 font-medium">${calculations.step5_Cost.toFixed(6)} (input)</div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-purple-50 rounded-lg">
+              <div className="flex flex-col gap-4 rounded-lg bg-purple-50 p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold">6</div>
                   <div>
@@ -427,7 +427,7 @@ const RAGTokenCalculator = () => {
                     <div className="text-sm text-gray-600">Final generated response</div>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-left sm:text-right">
                   <div className="text-lg font-semibold text-purple-600">{calculations.step6_OutputAnswer.toLocaleString()} tokens</div>
                   <div className="text-sm text-green-600 font-medium">${calculations.step6_Cost.toFixed(6)} (output)</div>
                 </div>
@@ -435,8 +435,8 @@ const RAGTokenCalculator = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="rounded-xl bg-white p-6 shadow-lg">
               <h3 className="text-lg font-semibold mb-4 text-gray-800">Token Summary</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
@@ -454,7 +454,7 @@ const RAGTokenCalculator = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="rounded-xl bg-white p-6 shadow-lg">
               <h3 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-green-600" />
                 Cost Breakdown
@@ -476,9 +476,9 @@ const RAGTokenCalculator = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="rounded-xl bg-white p-6 shadow-lg">
             <h3 className="text-lg font-semibold mb-4 text-gray-800">Volume Projections</h3>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
               {[
                 { queries: 100, period: '100 queries' },
                 { queries: 1000, period: '1K queries' },
