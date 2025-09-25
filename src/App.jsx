@@ -13,6 +13,11 @@ import TextConverter from './components/TextConverter';
 import ElasticSearchRamCalculator from './components/ElasticSearchRamCalculator';
 import MailtoLinkGenerator from './components/MailtoLinkGenerator';
 import QrCodeGenerator from './components/QrCodeGenerator';
+import ScreenshotOptimizer from './components/ScreenshotOptimizer';
+import MeetingPrepAssistant from './components/MeetingPrepAssistant';
+import RegexTester from './components/RegexTester';
+import ContentToneAdjuster from './components/ContentToneAdjuster';
+import ApiLatencyBudgetCalculator from './components/ApiLatencyBudgetCalculator';
 
 
 function App() {
@@ -66,6 +71,16 @@ function App() {
                   ? 'Mailto Link Generator'
                   : activeTool === 'qrcode'
                   ? 'QR Code Generator'
+                  : activeTool === 'screenshot'
+                  ? 'Screenshot Optimizer'
+                  : activeTool === 'meetingprep'
+                  ? 'Meeting Prep Assistant'
+                  : activeTool === 'regex'
+                  ? 'Regex Tester & Explainer'
+                  : activeTool === 'tone'
+                  ? 'Content Tone Adjuster'
+                  : activeTool === 'latency'
+                  ? 'API Latency Budget Calculator'
                   : 'coming soon ..'}
               </h1>
               <div className="flex items-center space-x-4">
@@ -100,6 +115,16 @@ function App() {
                 <MailtoLinkGenerator />
               ) : activeTool === 'qrcode' ? (
                 <QrCodeGenerator />
+              ) : activeTool === 'screenshot' ? (
+                <ScreenshotOptimizer />
+              ) : activeTool === 'meetingprep' ? (
+                <MeetingPrepAssistant />
+              ) : activeTool === 'regex' ? (
+                <RegexTester />
+              ) : activeTool === 'tone' ? (
+                <ContentToneAdjuster />
+              ) : activeTool === 'latency' ? (
+                <ApiLatencyBudgetCalculator />
               ) : activeTool === 'comingsoon' ? (
                 <div className="text-center">
                   <button
