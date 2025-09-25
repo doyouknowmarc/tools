@@ -214,17 +214,17 @@ function ScreenshotOptimizer() {
 
           <form onSubmit={handleUrlSubmit} className="space-y-3">
             <label className="block text-sm font-medium text-gray-700">Optimise from a URL</label>
-            <div className="flex rounded-lg shadow-sm overflow-hidden border border-gray-200">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <input
                 type="url"
                 placeholder="https://example.com/screenshot.png"
                 value={inputUrl}
                 onChange={(event) => setInputUrl(event.target.value)}
-                className="flex-1 px-3 py-2 text-sm focus:outline-none"
+                className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
               />
               <button
                 type="submit"
-                className="px-4 bg-gray-900 text-white text-sm font-medium hover:bg-gray-800"
+                className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
               >
                 Fetch
               </button>
@@ -233,7 +233,7 @@ function ScreenshotOptimizer() {
 
           <div className="space-y-3">
             <p className="text-sm font-medium text-gray-700">Quality preset</p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
               {qualityPresets.map((preset) => (
                 <button
                   key={preset.label}
@@ -272,7 +272,7 @@ function ScreenshotOptimizer() {
 
           <div className="space-y-3">
             <p className="text-sm font-medium text-gray-700">Output format</p>
-            <div className="flex space-x-2">
+            <div className="flex flex-wrap gap-2 sm:flex-nowrap">
               {formatOptions.map((option) => (
                 <button
                   key={option.mime}
@@ -312,7 +312,7 @@ function ScreenshotOptimizer() {
 
             {originalInfo && optimizedInfo && !error && (
               <div className="mt-4 space-y-4">
-                <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
                   <div>
                     <p className="text-xs uppercase text-gray-500">Original</p>
                     <p className="font-medium text-gray-900">{bytesToKb(originalInfo.size)}</p>

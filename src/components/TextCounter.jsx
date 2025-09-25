@@ -28,18 +28,18 @@ export default function TextCounter() {
         onChange={(e) => setText(e.target.value)}
       />
       
-      <div className="mt-6 grid grid-cols-3 gap-4">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="border border-gray-200 rounded-lg p-4">
           <p className="text-sm font-medium text-gray-700">Words</p>
-          <p className="text-2xl font-bold text-gray-800">{countWords()}</p>
+          <p className="text-xl font-bold text-gray-800 sm:text-2xl">{countWords()}</p>
         </div>
         <div className="border border-gray-200 rounded-lg p-4">
           <p className="text-sm font-medium text-gray-700">Characters</p>
-          <p className="text-2xl font-bold text-gray-800">{countCharacters()}</p>
+          <p className="text-xl font-bold text-gray-800 sm:text-2xl">{countCharacters()}</p>
         </div>
         <div className="border border-gray-200 rounded-lg p-4">
           <p className="text-sm font-medium text-gray-700">Spaces</p>
-          <p className="text-2xl font-bold text-gray-800">{countSpaces()}</p>
+          <p className="text-xl font-bold text-gray-800 sm:text-2xl">{countSpaces()}</p>
         </div>
       </div>
     </div>
