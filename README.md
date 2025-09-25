@@ -89,6 +89,41 @@ npm run build
 npm run preview
 ```
 
+## Connecting the AI tools to Ollama
+
+The Tone Adjuster and Meeting Prep Assistant can call a locally running [Ollama](https://ollama.ai) instance for live rewrites and briefings.
+
+1. **Allow browser access** by setting the host and allowed origins when launching Ollama:
+
+   ```bash
+   OLLAMA_HOST=0.0.0.0:11434 \
+   OLLAMA_ORIGINS="http://localhost:5173" \
+   ollama serve
+   ```
+
+   If you run the dev server on another port (or deploy the app), add that origin to the `OLLAMA_ORIGINS` list. You can also make the change permanent by adding the values to `~/.ollama/config`:
+
+   ```toml
+   [server]
+   listen = "0.0.0.0:11434"
+   origins = [
+     "http://localhost:5173",
+     "http://127.0.0.1:5173"
+   ]
+   ```
+
+   Restart Ollama after updating the configuration file.
+
+2. **Verify the API is reachable**:
+
+   ```bash
+   curl http://localhost:11434/api/tags
+   ```
+
+   The response should list the available models.
+
+3. **Load models inside the app** by entering the base URL (for example `http://localhost:11434`) in the Tone Adjuster or Meeting Prep panels and clicking **Refresh models**. Once connected, choose a model and trigger the rewrite/drafting buttons to call Ollama.
+
 ## Deployment to GitHub Pages
 
 This project is configured for easy deployment to GitHub Pages. Follow these steps:
