@@ -10,6 +10,7 @@ import {
   Sparkles,
   Wand2
 } from 'lucide-react';
+import { readOllamaStream } from '../utils/ollama';
 
 const TONES = [
   {
@@ -26,6 +27,11 @@ const TONES = [
     id: 'concise',
     label: 'Concise',
     description: 'Direct and trimmed down to essentials.'
+  },
+  {
+    id: 'grammar',
+    label: 'Grammar polish',
+    description: 'Fix typos and grammar without changing the voice.'
   },
   {
     id: 'supportive',
@@ -98,6 +104,11 @@ function applyTone(text, tone) {
       output = output.replace(/([.!?])\s*(?=[.!?])/g, '$1 ');
       break;
     }
+    case 'grammar': {
+      output = output.replace(/\s+/g, ' ');
+      output = ensurePunctuation(output);
+      break;
+    }
     case 'supportive': {
       output = replaceContractions(output);
       if (!/\bthank/i.test(output)) {
@@ -119,6 +130,19 @@ function analyseText(text) {
   const sentences = text.trim() ? text.trim().split(/[.!?]+/).filter(Boolean).length : 0;
   const readingTime = words === 0 ? 0 : Math.max(1, Math.round(words / 200));
   return { words, sentences, readingTime };
+}
+
+function buildRemotePrompt(tone, sourceText) {
+  const trimmed = sourceText.trim();
+  if (!trimmed) {
+    return '';
+  }
+
+  if (tone.id === 'grammar') {
+    return `You are a meticulous copy editor. Correct grammar, spelling, and punctuation errors in the message below while preserving the original intent, voice, and formatting. Return the cleaned version only.\n\nMessage:\n${trimmed}\n\nCorrected message:`;
+  }
+
+  return `You are an expert communications assistant. Rewrite the message below so it matches a ${tone.label.toLowerCase()} tone. Retain all key facts, keep it concise, and respond with text ready to paste.\n\nMessage:\n${trimmed}\n\nRewritten message:`;
 }
 
 function ContentToneAdjuster() {
@@ -178,9 +202,11 @@ function ContentToneAdjuster() {
       }
       setModels(data.models);
       if (!data.models.length) {
-        setModelsMessage('No models available on the Ollama server.');
+        setModelsMessage('No models available on the Ollama server. Pull one with "ollama pull" then refresh.');
       } else {
-        setModelsMessage(`Loaded ${data.models.length} model${data.models.length === 1 ? '' : 's'}.`);
+        setModelsMessage(
+          `Ready – ${data.models.length} model${data.models.length === 1 ? '' : 's'} found. Select one to stream rewrites.`
+        );
       }
     } catch (error) {
       console.error('Failed to load Ollama models', error);
@@ -199,6 +225,13 @@ function ContentToneAdjuster() {
       setRemoteError('Select a model to generate a rewrite.');
       return;
     }
+
+    const prompt = buildRemotePrompt(selectedTone, source);
+    if (!prompt) {
+      setRemoteError('Provide some text before requesting a rewrite.');
+      return;
+    }
+
     try {
       setIsGenerating(true);
       setRemoteError('');
@@ -210,20 +243,19 @@ function ContentToneAdjuster() {
         },
         body: JSON.stringify({
           model: selectedModel,
-          prompt: `Rewrite the following message so it matches a ${selectedTone.label.toLowerCase()} tone. Keep the response concise and ready to paste.\n\nMessage:\n${source.trim()}\n\nRewritten message:`,
-          stream: false
+          prompt,
+          stream: true
         })
       });
 
       if (!response.ok) {
         throw new Error(`Rewrite failed with status ${response.status}`);
       }
-      const data = await response.json();
-      const output = (data.response || data.output || '').trim();
-      if (!output) {
-        throw new Error('Ollama returned an empty response.');
-      }
-      setRemoteAdjusted(output);
+
+      const final = await readOllamaStream(response, (delta) => {
+        setRemoteAdjusted((prev) => prev + delta);
+      });
+      setRemoteAdjusted(final);
     } catch (error) {
       console.error('Failed to generate rewrite', error);
       setRemoteError(error.message || 'Unable to generate a rewrite.');
@@ -313,13 +345,14 @@ function ContentToneAdjuster() {
               </select>
             </div>
             {modelsMessage && <p className="text-xs text-gray-500">{modelsMessage}</p>}
-            <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-700">
-              <p className="font-semibold">Allow cross-origin requests</p>
-              <p className="mt-1">
-                Start Ollama with <code className="font-mono">OLLAMA_ORIGINS="http://localhost:5173"</code> (or the host serving this tool)
-                and <code className="font-mono">OLLAMA_HOST=0.0.0.0:11434</code> so the browser can reach it. Restart Ollama after updating the
-                config.
-              </p>
+            <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-700 space-y-2">
+              <p className="font-semibold">Start Ollama for the web app</p>
+              <p>Paste this snippet into your terminal, then refresh the models list:</p>
+              <pre className="whitespace-pre-wrap rounded bg-amber-100/60 p-2 font-mono text-[11px] text-amber-900">
+OLLAMA_HOST=0.0.0.0:11434 OLLAMA_ORIGINS="https://doyouknowmarc.github.io"
+ollama serve
+              </pre>
+              <p>Swap the origin for your local dev URL if needed.</p>
             </div>
           </div>
 
@@ -337,21 +370,26 @@ function ContentToneAdjuster() {
         </section>
 
         <section className="lg:col-span-3 space-y-4">
-          <div className="rounded-xl border border-gray-200 p-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-900 flex items-center space-x-2">
-                <Wand2 className="h-4 w-4" />
-                <span>Adjusted copy</span>
-              </h2>
+          <div className="rounded-xl border border-gray-200 bg-gray-50/60 p-4 space-y-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <h2 className="text-sm font-semibold text-gray-900 flex items-center space-x-2">
+                  <Wand2 className="h-4 w-4" />
+                  <span>Streamed rewrite from Ollama</span>
+                </h2>
+                <p className="mt-1 text-xs text-gray-500">
+                  Ollama handles the heavy lifting—pick a template and stream the polished draft here.
+                </p>
+              </div>
               <div className="flex items-center space-x-2">
                 <button
                   type="button"
                   onClick={generateWithOllama}
                   className="inline-flex items-center space-x-2 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 hover:border-gray-400 disabled:opacity-60"
-                  disabled={!hasRemoteConnection || isGenerating}
+                  disabled={!selectedModel || isGenerating}
                 >
                   {isGenerating && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                  <span>{isGenerating ? 'Rewriting…' : 'Rewrite with Ollama'}</span>
+                  <span>{isGenerating ? 'Streaming…' : 'Stream rewrite'}</span>
                 </button>
                 <button
                   type="button"
@@ -360,14 +398,44 @@ function ContentToneAdjuster() {
                   disabled={!(remoteAdjusted || adjusted)}
                 >
                   <Copy className="h-3.5 w-3.5" />
-                  <span>{copied ? 'Copied!' : 'Copy output'}</span>
+                  <span>
+                    {copied
+                      ? 'Copied!'
+                      : remoteAdjusted
+                      ? 'Copy streamed draft'
+                      : 'Copy local tweak'}
+                  </span>
                 </button>
               </div>
             </div>
-            <div className="mt-4 rounded-lg border border-dashed border-gray-200 bg-gray-50/60 p-4 text-sm text-gray-800 leading-relaxed min-h-[160px] whitespace-pre-wrap">
-              {remoteAdjusted || adjusted || 'Start typing to generate a rewrite.'}
+            <div
+              className="rounded-lg border border-dashed border-gray-200 bg-white p-4 text-sm text-gray-800 leading-relaxed min-h-[160px] whitespace-pre-wrap"
+              aria-live="polite"
+            >
+              {remoteAdjusted
+                ? remoteAdjusted
+                : isGenerating
+                ? 'Streaming response from Ollama…'
+                : selectedModel
+                ? 'Click "Stream rewrite" to generate a fresh draft from Ollama.'
+                : hasRemoteConnection
+                ? 'Select a model to begin streaming rewrites from Ollama.'
+                : 'Connect to Ollama above, load models, and choose one to stream rewrites.'}
             </div>
-            {remoteError && <p className="mt-2 text-xs text-red-500">{remoteError}</p>}
+            {remoteError && <p className="text-xs text-red-500">{remoteError}</p>}
+          </div>
+
+          <div className="rounded-xl border border-gray-200 p-4">
+            <h3 className="text-sm font-semibold text-gray-900 flex items-center space-x-2">
+              <Sparkles className="h-4 w-4" />
+              <span>Quick local tweak</span>
+            </h3>
+            <p className="mt-2 text-xs text-gray-500">
+              This offline helper mirrors the selected template while you wait for Ollama or when you are editing without a model.
+            </p>
+            <div className="mt-3 rounded-lg border border-dashed border-gray-200 bg-gray-50/60 p-4 text-sm text-gray-700 min-h-[120px] whitespace-pre-wrap">
+              {adjusted || 'Start typing to preview the local transformation.'}
+            </div>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2">
@@ -377,9 +445,9 @@ function ContentToneAdjuster() {
                 <span>Guidance</span>
               </h3>
               <ul className="mt-3 space-y-2 text-sm text-gray-600">
+                <li>• Let Ollama handle heavy rewrites; lean on the local preview for instant tweaks.</li>
                 <li>• Tailor the presets to align with your brand voice.</li>
                 <li>• Use the copy button to paste into help desks or marketing drafts.</li>
-                <li>• Keep source text short for clearer transformations.</li>
               </ul>
             </div>
 
@@ -397,6 +465,9 @@ function ContentToneAdjuster() {
                 )}
                 {selectedTone.id === 'concise' && (
                   <li>• Consider bullet points for multi-step instructions.</li>
+                )}
+                {selectedTone.id === 'grammar' && (
+                  <li>• Double-check names and product jargon after grammar clean-up.</li>
                 )}
                 {selectedTone.id === 'supportive' && (
                   <li>• Offer an optional call or extra resource link to go the extra mile.</li>

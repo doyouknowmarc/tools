@@ -93,21 +93,14 @@ npm run preview
 
 The Tone Adjuster and Meeting Prep Assistant can call a locally running [Ollama](https://ollama.ai) instance for live rewrites and briefings.
 
-1. **Allow browser access** by setting the host and allowed origins when launching Ollama:
+1. **Allow browser access** by launching Ollama with the following command (paste it straight into your terminal):
 
    ```bash
-   OLLAMA_HOST=0.0.0.0:11434 \
-   OLLAMA_ORIGINS="http://localhost:5173" \
+   OLLAMA_HOST=0.0.0.0:11434 OLLAMA_ORIGINS="https://doyouknowmarc.github.io"
    ollama serve
    ```
-   
-   Copy Paste Example:
-   ```bash
-   OLLAMA_HOST=0.0.0.0:11434 OLLAMA_ORIGINS="https://doyouknowmarc.github.io" \
-   ollama serve
-   ```
-   
-   If you run the dev server on another port (or deploy the app), add that origin to the `OLLAMA_ORIGINS` list. You can also make the change permanent by adding the values to `~/.ollama/config`:
+
+   Swap the origin for your local dev URL (for example `http://localhost:5173`) if you are running the app from another host. You can also make the change permanent by adding the values to `~/.ollama/config`:
 
    ```toml
    [server]
