@@ -1,6 +1,15 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
-import { CalendarCheck, ClipboardCheck, ClipboardList, Copy, Info, Lightbulb, ListChecks } from 'lucide-react';
+import {
+  CalendarCheck,
+  ClipboardCheck,
+  ClipboardList,
+  Copy,
+  Info,
+  Lightbulb,
+  ListChecks,
+  Loader2
+} from 'lucide-react';
 
 const MEETING_TYPES = [
   {
@@ -125,6 +134,13 @@ function MeetingPrepAssistant() {
   const [meetingType, setMeetingType] = useState(MEETING_TYPES[0]);
   const [agenda, setAgenda] = useState('');
   const [copied, setCopied] = useState(false);
+  const [ollamaHost, setOllamaHost] = useState('http://localhost:11434');
+  const [models, setModels] = useState([]);
+  const [modelsMessage, setModelsMessage] = useState('');
+  const [selectedModel, setSelectedModel] = useState('');
+  const [remoteSummary, setRemoteSummary] = useState('');
+  const [remoteError, setRemoteError] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const lines = useMemo(() => normaliseLines(agenda), [agenda]);
   const topics = useMemo(() => extractTopics(lines), [lines]);
@@ -158,14 +174,100 @@ function MeetingPrepAssistant() {
     return sections.join('\n');
   }, [followUps, meetingType.label, objectives, questions]);
 
+  const normalisedHost = useMemo(() => ollamaHost.trim().replace(/\/$/, ''), [ollamaHost]);
+
+  useEffect(() => {
+    if (!models.length) return;
+    if (!selectedModel) {
+      const first = models[0];
+      const name = first?.name || first?.model || '';
+      setSelectedModel(name);
+    } else if (!models.some((model) => (model.name || model.model) === selectedModel)) {
+      setSelectedModel('');
+    }
+  }, [models, selectedModel]);
+
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(summaryText);
+      await navigator.clipboard.writeText(remoteSummary || summaryText);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       console.error('Failed to copy summary', error);
       setCopied(false);
+    }
+  };
+
+  const loadModels = async () => {
+    if (!normalisedHost) {
+      setModelsMessage('Enter the Ollama address to load models.');
+      return;
+    }
+
+    try {
+      setModelsMessage('Connecting to Ollama…');
+      const response = await fetch(`${normalisedHost}/api/tags`);
+      if (!response.ok) {
+        throw new Error(`Model request failed with status ${response.status}`);
+      }
+      const data = await response.json();
+      if (!Array.isArray(data.models)) {
+        throw new Error('Unexpected response payload.');
+      }
+      setModels(data.models);
+      if (!data.models.length) {
+        setModelsMessage('No models available on the Ollama server.');
+      } else {
+        setModelsMessage(`Loaded ${data.models.length} model${data.models.length === 1 ? '' : 's'}.`);
+      }
+    } catch (error) {
+      console.error('Failed to load Ollama models', error);
+      setModels([]);
+      setSelectedModel('');
+      setModelsMessage(error.message || 'Unable to reach Ollama.');
+    }
+  };
+
+  const generateWithOllama = async () => {
+    if (!selectedModel) {
+      setRemoteError('Select a model to create a briefing.');
+      return;
+    }
+    if (!summaryText.trim()) {
+      setRemoteError('Add some agenda details first.');
+      return;
+    }
+
+    try {
+      setIsGenerating(true);
+      setRemoteError('');
+      setRemoteSummary('');
+      const response = await fetch(`${normalisedHost}/api/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: selectedModel,
+          prompt: `You are a chief of staff preparing an executive briefing for a ${meetingType.label.toLowerCase()}. Using the draft notes below, produce a succinct agenda with objectives, questions, and follow-ups ready to paste into an email. Use bullet lists where it helps readability.\n\nDraft notes:\n${summaryText}\n\nBriefing:`,
+          stream: false
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Briefing failed with status ${response.status}`);
+      }
+      const data = await response.json();
+      const output = (data.response || data.output || '').trim();
+      if (!output) {
+        throw new Error('Ollama returned an empty response.');
+      }
+      setRemoteSummary(output);
+    } catch (error) {
+      console.error('Failed to generate meeting briefing', error);
+      setRemoteError(error.message || 'Unable to generate a meeting briefing.');
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -218,6 +320,57 @@ function MeetingPrepAssistant() {
                   <p className="text-xs text-gray-400">{type.description}</p>
                 </button>
               ))}
+            </div>
+          </section>
+
+          <section className="rounded-xl border border-gray-200 p-4 space-y-3 bg-gray-50/60">
+            <div className="flex items-center space-x-2 text-sm font-semibold text-gray-700">
+              <Info className="h-4 w-4" />
+              <span>Connect to Ollama</span>
+            </div>
+            <label className="text-xs font-medium text-gray-500">
+              Base URL
+              <input
+                value={ollamaHost}
+                onChange={(event) => setOllamaHost(event.target.value)}
+                className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm text-gray-700 focus:border-gray-500 focus:outline-none"
+                placeholder="http://localhost:11434"
+              />
+            </label>
+            <div className="flex items-center space-x-2">
+              <button
+                type="button"
+                onClick={loadModels}
+                className="inline-flex items-center space-x-2 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs font-medium text-gray-600 hover:border-gray-400"
+              >
+                <span>Refresh models</span>
+              </button>
+              <select
+                value={selectedModel}
+                onChange={(event) => setSelectedModel(event.target.value)}
+                className="flex-1 rounded-md border border-gray-300 px-2 py-1 text-sm text-gray-700 focus:border-gray-500 focus:outline-none"
+                disabled={!models.length}
+              >
+                <option value="">
+                  {models.length ? 'Select a model' : 'Load models to choose'}
+                </option>
+                {models.map((model) => {
+                  const name = model.name || model.model;
+                  return (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            {modelsMessage && <p className="text-xs text-gray-500">{modelsMessage}</p>}
+            <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-700">
+              <p className="font-semibold">Allow cross-origin requests</p>
+              <p className="mt-1">
+                Start Ollama with <code className="font-mono">OLLAMA_ORIGINS="http://localhost:5173"</code> (or the host serving this tool)
+                and <code className="font-mono">OLLAMA_HOST=0.0.0.0:11434</code> so the browser can reach it. Restart Ollama after updating the config.
+              </p>
             </div>
           </section>
         </div>
@@ -279,15 +432,32 @@ function MeetingPrepAssistant() {
             </ul>
           </section>
 
-          <section className="rounded-xl border border-gray-200 p-4 bg-gray-50/60">
-            <div className="flex items-center space-x-2 text-sm font-medium text-gray-600">
-              <Info className="h-4 w-4" />
-              <span>Prep tip</span>
+          <section className="rounded-xl border border-gray-200 p-4 bg-gray-50/60 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2 text-sm font-semibold text-gray-700">
+                <Lightbulb className="h-4 w-4" />
+                <span>AI-generated briefing</span>
+              </div>
+              <button
+                type="button"
+                onClick={generateWithOllama}
+                className="inline-flex items-center space-x-2 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 hover:border-gray-400 disabled:opacity-60"
+                disabled={!models.length || isGenerating}
+              >
+                {isGenerating && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                <span>{isGenerating ? 'Drafting…' : 'Draft with Ollama'}</span>
+              </button>
             </div>
-            <p className="mt-3 text-sm text-gray-500">
-              Share the copied summary with attendees ahead of time so questions and risks surface before the meeting begins. It
-              keeps live sessions focused on decisions rather than context setting.
-            </p>
+            <div className="rounded-lg border border-dashed border-gray-200 bg-white p-4 text-sm text-gray-700 min-h-[160px] whitespace-pre-wrap">
+              {remoteSummary || 'Connect to Ollama and click “Draft with Ollama” to generate an executive-ready briefing.'}
+            </div>
+            {remoteError && <p className="text-xs text-red-500">{remoteError}</p>}
+            {!remoteSummary && (
+              <p className="text-xs text-gray-500">
+                Share the generated summary with attendees ahead of time so questions and risks surface before the meeting
+                begins.
+              </p>
+            )}
           </section>
         </div>
       </div>
