@@ -11,7 +11,12 @@ import {
   Activity,
   RefreshCw,
   Database,
-  QrCode
+  Braces,
+  Wand2 as WandIcon,
+  BarChart2 as BarChartIcon,
+  QrCode,
+  Sparkles,
+  ClipboardList as ClipboardListIcon
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -30,17 +35,30 @@ function Sidebar({ activeTool, setActiveTool }) {
 
           {/* Navigation */}
           <nav className="space-y-2">
-            <button 
+            <button
               className={clsx(
                 "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
-                activeTool === 'heic2jpg' 
-                  ? "bg-gray-900 text-white hover:bg-gray-800" 
+                activeTool === 'heic2jpg'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
                   : "text-gray-600 hover:bg-gray-50"
               )}
               onClick={() => setActiveTool('heic2jpg')}
             >
               <ImagePlus className="w-5 h-5" />
               <span className="font-medium">HEIC to JPG</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'screenshot'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setActiveTool('screenshot')}
+            >
+              <Sparkles className="w-5 h-5" />
+              <span className="font-medium">Screenshot Optimizer</span>
             </button>
 
             <button 
@@ -84,6 +102,19 @@ function Sidebar({ activeTool, setActiveTool }) {
             <button
               className={clsx(
                 "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'meetingprep'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setActiveTool('meetingprep')}
+            >
+              <ClipboardListIcon className="w-5 h-5" />
+              <span className="font-medium">Meeting Prep</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
                 activeTool === 'ipaddress'
                   ? "bg-gray-900 text-white hover:bg-gray-800"
                   : "text-gray-600 hover:bg-gray-50"
@@ -105,6 +136,19 @@ function Sidebar({ activeTool, setActiveTool }) {
             >
               <Mail className="w-5 h-5" />
               <span className="font-medium">Mailto Link</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'tone'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={() => setActiveTool('tone')}
+            >
+              <WandIcon className="w-5 h-5" />
+              <span className="font-medium">Tone Adjuster</span>
             </button>
 
             <button
@@ -149,6 +193,18 @@ function Sidebar({ activeTool, setActiveTool }) {
             <button
               className={clsx(
                 "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'regex'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50",
+              )}
+              onClick={() => setActiveTool('regex')}
+            >
+              <Braces className="w-5 h-5" />
+              <span className="font-medium">Regex Tester</span>
+            </button>
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
                 activeTool === 'tokenrate'
                   ? "bg-gray-900 text-white hover:bg-gray-800"
                   : "text-gray-600 hover:bg-gray-50",
@@ -170,6 +226,19 @@ function Sidebar({ activeTool, setActiveTool }) {
             >
               <Database className="w-5 h-5" />
               <span className="font-medium">ES RAM Calculator</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'latency'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50",
+              )}
+              onClick={() => setActiveTool('latency')}
+            >
+              <BarChartIcon className="w-5 h-5" />
+              <span className="font-medium">API Latency</span>
             </button>
 
 

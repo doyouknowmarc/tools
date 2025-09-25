@@ -9,6 +9,31 @@ A collection of useful web-based tools including a HEIC to JPG converter, text c
 - 🔒 Privacy-focused: all processing happens in your browser
 - 💾 Batch download all converted images
 
+### Screenshot Optimizer
+- 🪄 Compress PNG/JPEG screenshots with quality presets
+- 📉 Compare original and optimised file sizes instantly
+- 🧼 Re-encode assets to strip metadata before sharing
+
+### Meeting Prep Assistant
+- 🧭 Summarise agendas into clear objectives and prompts
+- ❓ Surface targeted questions based on meeting type
+- ✅ Generate actionable follow-up tasks ready to share
+
+### Regex Tester & Explainer
+- 🔍 Highlight regex matches against sample text instantly
+- 🧠 Break patterns into human-friendly explanations
+- 🎛️ Toggle flags to explore different matching behaviours
+
+### Content Tone Adjuster
+- ✍️ Rephrase copy across formal, friendly, concise, and supportive tones
+- 📋 Copy ready-to-send rewrites with one click
+- 📊 Track word, sentence, and reading time changes instantly
+
+### API Latency Budget Calculator
+- ⏱️ Model cumulative latency across service dependencies
+- 🧮 Factor in concurrency, fan-out, and jitter for p95 estimates
+- 📈 Highlight the biggest contributors and optimisation opportunities
+
 ### Text Counter
 - 📝 Count characters, words, and sentences in text
 - 📊 Real-time statistics as you type

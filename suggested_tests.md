@@ -127,3 +127,63 @@ Although not a standalone tool, add a basic integration test to ensure selecting
 * Use Playwright to run a smoke tour: iterate through each sidebar button, confirm the header text updates, and perform a minimal interaction per tool (e.g., type text, toggle slider). This ensures routing state and main components mount without runtime errors in the browser.
 * For features relying on external services (`PublicIp`, OCR workers), stub network requests/service workers at the browser layer to produce deterministic results.
 
+## Screenshot Optimizer (`ScreenshotOptimizer.jsx`)
+
+### Component tests
+1. Mock a small PNG file and assert the original metadata panel renders pixel dimensions and file size.
+2. Override `HTMLCanvasElement.prototype.toBlob` to resolve a deterministic blob. Change quality/format controls and ensure the download button href updates accordingly.
+3. Enter an invalid URL and confirm the inline error renders, then fetch a valid PNG via `fetch` mock to verify state resets and optimisation runs.
+4. Trigger `Reset selection` and ensure both original and optimised panels clear while the presets revert to defaults.
+
+### Manual checks
+* Drag in a retina screenshot (~2× scale) and try each preset to compare visual fidelity versus file savings.
+* Exercise the WebP output on browsers that support the format and download to confirm file extensions.
+
+## Meeting Prep Assistant (`MeetingPrepAssistant.jsx`)
+
+### Component tests
+1. Supply agenda text with bullets and assert derived objectives/questions/follow-ups match deterministic expectations for each meeting type.
+2. Click the template buttons and ensure state changes update `meetingType` styling and regenerate summaries.
+3. Mock `navigator.clipboard.writeText` to confirm the copy button reflects success and resets after the timeout.
+4. Verify that empty agendas still render default prompts tailored to the chosen meeting type.
+
+### Manual checks
+* Paste real project agendas (status, kickoff, retro) to gauge usefulness of generated prompts.
+* Confirm summary copy preserves newline formatting when pasted into docs or calendar invites.
+
+## Regex Tester & Explainer (`RegexTester.jsx`)
+
+### Component tests
+1. Render with default pattern and sample text; assert matches array equals expected ticket IDs and capture groups.
+2. Toggle flag buttons and verify the resulting regex instance is reconstructed with the selected flags.
+3. Input an invalid pattern and ensure the alert displays the thrown error message while matches section hides.
+4. Provide a pattern with recognised tokens (e.g., `\d`, `^`, `$`) and assert the explainer renders mapped descriptions.
+
+### Manual checks
+* Paste multiline logs and confirm highlighting respects the multiline flag.
+* Try patterns with zero-width matches to ensure the component still progresses and highlights correctly.
+
+## Content Tone Adjuster (`ContentToneAdjuster.jsx`)
+
+### Component tests
+1. Feed sample text and ensure each tone preset returns deterministic rewrites (mock timers for copy reset).
+2. Verify selecting a tone toggles button styling and recalculates follow-up hints.
+3. Mock `navigator.clipboard.writeText` to confirm successful copy toggles the feedback state and failure logs gracefully.
+4. Assert the metrics card updates word/sentence counts when the source text changes.
+
+### Manual checks
+* Validate tone shifts on a variety of marketing vs. support snippets.
+* Ensure special characters and multiline inputs maintain formatting in the adjusted output panel.
+
+## API Latency Budget Calculator (`ApiLatencyBudgetCalculator.jsx`)
+
+### Component tests
+1. Start with defaults and assert p50/p95 totals equal manual calculations from the helper.
+2. Update latency/calls/concurrency fields and confirm derived metrics recompute without mutating sibling rows.
+3. Add and remove dependencies to ensure state updates predictably and the optimisation list reorders accordingly.
+4. Adjust jitter slider and verify the p95 total and slack status respond to the new multiplier.
+
+### Manual checks
+* Model real API architectures (fan-out, caching) to validate the concurrency heuristic feels right.
+* Stress test large call counts to ensure the calculator remains responsive.
+
