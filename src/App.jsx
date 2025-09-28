@@ -70,11 +70,11 @@ function App() {
       <div className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
         <div
           className={clsx(
-            'mx-auto',
+            'mx-auto w-full',
             activeTool === 'stakeholders' || activeTool === 'ragcalc'
-              ? 'w-full max-w-none'
+              ? 'max-w-none'
               : activeTool === 'meetingprep' || activeTool === 'tone'
-              ? 'max-w-5xl'
+              ? 'max-w-6xl xl:max-w-7xl'
               : 'max-w-4xl'
           )}
         >
