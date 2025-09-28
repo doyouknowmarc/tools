@@ -6,35 +6,35 @@ import 'leaflet/dist/leaflet.css';
 const SAMPLE_DATA = [
   {
     source: 'GPS',
-    accuracy: 7.572617358702679,
-    latitude: 48.23796473611267,
+    accuracy: 5.8,
+    latitude: 37.773972,
     id: 'sample-1',
-    timestamp: '2025-09-27T20:03:13Z',
-    longitude: 16.364144320930006,
+    timestamp: '2024-05-12T17:03:13Z',
+    longitude: -122.431297,
   },
   {
     source: 'GPS',
-    accuracy: 7.572617358702679,
-    latitude: 48.23796473611267,
+    accuracy: 6.4,
+    latitude: 37.775102,
     id: 'sample-2',
-    timestamp: '2025-09-27T20:03:52Z',
-    longitude: 16.364144320930006,
+    timestamp: '2024-05-12T17:05:42Z',
+    longitude: -122.428551,
   },
   {
     source: 'Wi-Fi',
-    accuracy: 80.57926687079747,
-    latitude: 48.23799097166411,
+    accuracy: 32.5,
+    latitude: 37.772318,
     id: 'sample-3',
-    timestamp: '2025-09-27T20:04:06Z',
-    longitude: 16.364034008897786,
+    timestamp: '2024-05-12T17:07:06Z',
+    longitude: -122.434812,
   },
   {
     source: 'Wi-Fi',
-    accuracy: 53.630239190113,
-    latitude: 48.23804517871893,
+    accuracy: 41.9,
+    latitude: 37.774561,
     id: 'sample-4',
-    timestamp: '2025-09-27T20:04:11Z',
-    longitude: 16.36410155673662,
+    timestamp: '2024-05-12T17:08:11Z',
+    longitude: -122.437105,
   },
 ];
 
@@ -61,6 +61,14 @@ function LocationDataTool() {
     setError('');
   }, []);
 
+  const destroyMap = useCallback(() => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.off();
+      mapInstanceRef.current.remove();
+      mapInstanceRef.current = null;
+    }
+  }, []);
+
   const resetState = useCallback(() => {
     setView('upload');
     setLocationData([]);
@@ -69,11 +77,8 @@ function LocationDataTool() {
     setAddressStatus('idle');
     setError('');
     setSuccess('');
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.remove();
-      mapInstanceRef.current = null;
-    }
-  }, []);
+    destroyMap();
+  }, [destroyMap]);
 
   const downloadSample = () => {
     const blob = new Blob([JSON.stringify(SAMPLE_DATA, null, 2)], {
@@ -276,11 +281,8 @@ function LocationDataTool() {
 
     mapInstanceRef.current = map;
 
-    return () => {
-      map.remove();
-      mapInstanceRef.current = null;
-    };
-  }, [locationData, view]);
+    return destroyMap;
+  }, [destroyMap, locationData, view]);
 
   useEffect(() => {
     if (view !== 'visualize' || locationData.length === 0) {
@@ -547,11 +549,11 @@ function LocationDataTool() {
               <pre className="whitespace-pre-wrap break-all text-left text-xs text-gray-800">
 {`[
   {
-    "latitude": 48.23796473611267,
-    "longitude": 16.364144320930006,
-    "accuracy": 7.57,
+    "latitude": 37.773972,
+    "longitude": -122.431297,
+    "accuracy": 5.8,
     "source": "GPS",
-    "timestamp": "2025-09-27T20:03:13Z",
+    "timestamp": "2024-05-12T17:03:13Z",
     "id": "unique-id"
   }
 ]`}
