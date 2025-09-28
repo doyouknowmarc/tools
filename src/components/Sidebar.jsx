@@ -38,7 +38,7 @@ function Sidebar({
   return (
     <div
       className={clsx(
-        'flex h-full w-64 flex-col border-r border-gray-200 bg-white',
+        'flex h-full w-64 flex-col overflow-y-auto border-r border-gray-200 bg-white',
         className
       )}
     >
