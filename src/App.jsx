@@ -41,8 +41,8 @@ function App() {
         />
         <div
           className={clsx(
-            'relative ml-auto flex h-full w-64 max-w-full transform transition-transform duration-300',
-            isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
+            'relative flex h-full w-64 max-w-full transform transition-transform duration-300',
+            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
           )}
         >
           <Sidebar
