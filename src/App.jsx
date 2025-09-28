@@ -18,8 +18,8 @@ import ScreenshotOptimizer from './components/ScreenshotOptimizer';
 import MeetingPrepAssistant from './components/MeetingPrepAssistant';
 import RegexTester from './components/RegexTester';
 import ContentToneAdjuster from './components/ContentToneAdjuster';
-import ApiLatencyBudgetCalculator from './components/ApiLatencyBudgetCalculator';
 import LocationDataTool from './components/LocationDataTool';
+import Base64Tool from './components/Base64Tool';
 
 function App() {
   // Active tool state
@@ -73,6 +73,8 @@ function App() {
             'mx-auto',
             activeTool === 'stakeholders' || activeTool === 'ragcalc'
               ? 'w-full max-w-none'
+              : activeTool === 'meetingprep' || activeTool === 'tone'
+              ? 'max-w-5xl'
               : 'max-w-4xl'
           )}
         >
@@ -120,8 +122,8 @@ function App() {
                   ? 'Regex Tester & Explainer'
                   : activeTool === 'tone'
                   ? 'Content Tone Adjuster'
-                  : activeTool === 'latency'
-                  ? 'API Latency Budget Calculator'
+                  : activeTool === 'base64'
+                  ? 'Base64 Encoder & Decoder'
                   : activeTool === 'locationdata'
                   ? 'Location Data Visualizer'
                   : 'coming soon ..'}
@@ -166,8 +168,8 @@ function App() {
               <RegexTester />
             ) : activeTool === 'tone' ? (
               <ContentToneAdjuster />
-            ) : activeTool === 'latency' ? (
-              <ApiLatencyBudgetCalculator />
+            ) : activeTool === 'base64' ? (
+              <Base64Tool />
             ) : activeTool === 'locationdata' ? (
               <LocationDataTool />
             ) : activeTool === 'comingsoon' ? (

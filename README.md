@@ -29,10 +29,10 @@ A collection of useful web-based tools including a HEIC to JPG converter, text c
 - 📋 Copy ready-to-send rewrites with one click
 - 📊 Track word, sentence, and reading time changes instantly
 
-### API Latency Budget Calculator
-- ⏱️ Model cumulative latency across service dependencies
-- 🧮 Factor in concurrency, fan-out, and jitter for p95 estimates
-- 📈 Highlight the biggest contributors and optimisation opportunities
+### Base64 Encoder & Decoder
+- 🔁 Convert text between plain strings and Base64 with instant previews
+- 🖼️ Turn images into shareable Base64 data URLs and decode payloads back into files
+- 📋 Copy results or download decoded images in a single click
 
 ### Text Counter
 - 📝 Count characters, words, and sentences in text
