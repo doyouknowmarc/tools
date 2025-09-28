@@ -32,6 +32,19 @@ This document outlines recommended automated and manual tests for each tool surf
 3. Enter malformed binary (`01002`) and verify non-binary tokens are ignored (`''`) rather than throwing.
 4. Click the switch button and ensure the previous output becomes the new input while the mode toggles.
 
+## Base64 Tool (`Base64Tool.jsx`)
+
+### Component tests
+1. With encode mode active, enter `"hello"` and assert the Base64 result equals `aGVsbG8=`.
+2. Switch to decode mode, paste the same Base64 string, and ensure the output returns to `hello`.
+3. Mock `navigator.clipboard.writeText` to simulate both successful and failed copy attempts for the text result and image payload buttons.
+4. Upload a mock image file via `FileReader` and verify the component surfaces file metadata, the resulting data URL, and the raw Base64 payload.
+5. Paste an invalid Base64 string and confirm the error message renders while previews are cleared.
+
+### Manual checks
+* Use a large PNG or JPEG file to confirm metadata reporting and copy interactions remain responsive.
+* Decode a Base64 data URL captured from another app and download the regenerated image to ensure MIME handling produces a valid file.
+
 ## Pomodoro Timer (`PomodoroTimer.jsx`)
 
 ### Component tests
@@ -174,16 +187,4 @@ Although not a standalone tool, add a basic integration test to ensure selecting
 ### Manual checks
 * Validate tone shifts on a variety of marketing vs. support snippets.
 * Ensure special characters and multiline inputs maintain formatting in the adjusted output panel.
-
-## API Latency Budget Calculator (`ApiLatencyBudgetCalculator.jsx`)
-
-### Component tests
-1. Start with defaults and assert p50/p95 totals equal manual calculations from the helper.
-2. Update latency/calls/concurrency fields and confirm derived metrics recompute without mutating sibling rows.
-3. Add and remove dependencies to ensure state updates predictably and the optimisation list reorders accordingly.
-4. Adjust jitter slider and verify the p95 total and slack status respond to the new multiplier.
-
-### Manual checks
-* Model real API architectures (fan-out, caching) to validate the concurrency heuristic feels right.
-* Stress test large call counts to ensure the calculator remains responsive.
 

@@ -13,12 +13,12 @@ import {
   Database,
   Braces,
   Wand2 as WandIcon,
-  BarChart2 as BarChartIcon,
   QrCode,
   Sparkles,
   ClipboardList as ClipboardListIcon,
   MapPin,
-  X
+  X,
+  FileCode
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -113,6 +113,19 @@ function Sidebar({
             >
               <RefreshCw className="w-5 h-5" />
               <span className="font-medium">Converter</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'base64'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={handleSelectTool('base64')}
+            >
+              <FileCode className="w-5 h-5" />
+              <span className="font-medium">Base64 Tool</span>
             </button>
 
             <button
@@ -269,20 +282,6 @@ function Sidebar({
               <Database className="w-5 h-5" />
               <span className="font-medium">ES RAM Calculator</span>
             </button>
-
-            <button
-              className={clsx(
-                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
-                activeTool === 'latency'
-                  ? "bg-gray-900 text-white hover:bg-gray-800"
-                  : "text-gray-600 hover:bg-gray-50",
-              )}
-              onClick={handleSelectTool('latency')}
-            >
-              <BarChartIcon className="w-5 h-5" />
-              <span className="font-medium">API Latency</span>
-            </button>
-
 
             <button
               className={clsx(
