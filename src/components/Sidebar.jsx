@@ -17,6 +17,7 @@ import {
   QrCode,
   Sparkles,
   ClipboardList as ClipboardListIcon,
+  MapPin,
   X
 } from 'lucide-react';
 import clsx from 'clsx';
@@ -151,6 +152,19 @@ function Sidebar({
             >
               <Globe className="w-5 h-5" />
               <span className="font-medium">Public IP</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'locationdata'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={handleSelectTool('locationdata')}
+            >
+              <MapPin className="w-5 h-5" />
+              <span className="font-medium">Location Data</span>
             </button>
 
             <button

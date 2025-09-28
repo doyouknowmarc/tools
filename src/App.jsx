@@ -19,6 +19,7 @@ import MeetingPrepAssistant from './components/MeetingPrepAssistant';
 import RegexTester from './components/RegexTester';
 import ContentToneAdjuster from './components/ContentToneAdjuster';
 import ApiLatencyBudgetCalculator from './components/ApiLatencyBudgetCalculator';
+import LocationDataTool from './components/LocationDataTool';
 
 function App() {
   // Active tool state
@@ -121,6 +122,8 @@ function App() {
                   ? 'Content Tone Adjuster'
                   : activeTool === 'latency'
                   ? 'API Latency Budget Calculator'
+                  : activeTool === 'locationdata'
+                  ? 'Location Data Visualizer'
                   : 'coming soon ..'}
               </h1>
             </div>
@@ -165,6 +168,8 @@ function App() {
               <ContentToneAdjuster />
             ) : activeTool === 'latency' ? (
               <ApiLatencyBudgetCalculator />
+            ) : activeTool === 'locationdata' ? (
+              <LocationDataTool />
             ) : activeTool === 'comingsoon' ? (
               <div className="text-center">
                 <button
