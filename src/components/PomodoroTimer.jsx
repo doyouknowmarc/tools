@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Timer, Play, Pause, RotateCcw } from 'lucide-react';
 
 export default function PomodoroTimer() {
@@ -7,6 +7,7 @@ export default function PomodoroTimer() {
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkTime, setIsWorkTime] = useState(true);
+  const defaultTitleRef = useRef(document.title);
 
   useEffect(() => {
     let intervalId;
@@ -23,6 +24,18 @@ export default function PomodoroTimer() {
     }
     return () => clearInterval(intervalId);
   }, [isRunning, timeLeft, isWorkTime]);
+
+  useEffect(() => {
+    if (isRunning) {
+      document.title = `${isWorkTime ? 'Work' : 'Break'} – ${formatTime(timeLeft)}`;
+    } else {
+      document.title = defaultTitleRef.current;
+    }
+
+    return () => {
+      document.title = defaultTitleRef.current;
+    };
+  }, [timeLeft, isRunning, isWorkTime]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
