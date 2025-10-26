@@ -20,6 +20,7 @@ import RegexTester from './components/RegexTester';
 import ContentToneAdjuster from './components/ContentToneAdjuster';
 import LocationDataTool from './components/LocationDataTool';
 import Base64Tool from './components/Base64Tool';
+import VotingTool from './components/VotingTool';
 
 function App() {
   // Active tool state
@@ -126,6 +127,8 @@ function App() {
                   ? 'Base64 Encoder & Decoder'
                   : activeTool === 'locationdata'
                   ? 'Location Data Visualizer'
+                  : activeTool === 'voting'
+                  ? 'Local Voting Session'
                   : 'coming soon ..'}
               </h1>
             </div>
@@ -172,6 +175,8 @@ function App() {
               <Base64Tool />
             ) : activeTool === 'locationdata' ? (
               <LocationDataTool />
+            ) : activeTool === 'voting' ? (
+              <VotingTool />
             ) : activeTool === 'comingsoon' ? (
               <div className="text-center">
                 <button
