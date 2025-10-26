@@ -18,7 +18,8 @@ import {
   ClipboardList as ClipboardListIcon,
   MapPin,
   X,
-  FileCode
+  FileCode,
+  ThumbsUp
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -152,6 +153,19 @@ function Sidebar({
             >
               <ClipboardListIcon className="w-5 h-5" />
               <span className="font-medium">Meeting Prep</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'voting'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={handleSelectTool('voting')}
+            >
+              <ThumbsUp className="w-5 h-5" />
+              <span className="font-medium">Voting Session</span>
             </button>
 
             <button
