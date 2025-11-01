@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Hash,
   PenLine,
   Mail,
   HelpCircle,
@@ -65,6 +66,19 @@ function Sidebar({
 
           {/* Navigation */}
           <nav className="space-y-2">
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'counter'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50",
+              )}
+              onClick={handleSelectTool('counter')}
+            >
+              <Hash className="w-5 h-5" />
+              <span className="font-medium">Simple Counter</span>
+            </button>
+
             <button
               className={clsx(
                 "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",

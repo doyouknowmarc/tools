@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import { Menu } from 'lucide-react';
 import Sidebar from './components/Sidebar';
+import CounterTool from './components/CounterTool';
 import TextCounter from './components/TextCounter';
 import HeicToJpgConverter from './components/HeicToJpgConverter';
 import PomodoroTimer from './components/PomodoroTimer';
@@ -24,7 +25,7 @@ import VotingTool from './components/VotingTool';
 
 function App() {
   // Active tool state
-  const [activeTool, setActiveTool] = useState('heic2jpg');
+  const [activeTool, setActiveTool] = useState('counter');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -91,7 +92,9 @@ function App() {
                 <Menu className="h-5 w-5" />
               </button>
               <h1 className="text-xl font-semibold text-gray-900">
-                {activeTool === 'heic2jpg'
+                {activeTool === 'counter'
+                  ? 'Simple Counter'
+                  : activeTool === 'heic2jpg'
                   ? 'HEIC to JPG Converter'
                   : activeTool === 'textcounter'
                   ? 'Text Counter'
@@ -139,7 +142,9 @@ function App() {
 
           {/* Content Card */}
           <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-            {activeTool === 'heic2jpg' ? (
+            {activeTool === 'counter' ? (
+              <CounterTool />
+            ) : activeTool === 'heic2jpg' ? (
               <HeicToJpgConverter />
             ) : activeTool === 'textcounter' ? (
               <TextCounter />
