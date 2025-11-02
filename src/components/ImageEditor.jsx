@@ -40,7 +40,7 @@ const resizeHandleLabels = {
   sw: 'bottom-left corner'
 };
 
-function ImageEditor({ imageSrc, onClose, onApply }) {
+function ImageEditor({ imageSrc, onClose, onApply, initialState }) {
   const containerRef = useRef(null);
   const resizingRef = useRef(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -56,15 +56,17 @@ function ImageEditor({ imageSrc, onClose, onApply }) {
   const [cropSize, setCropSize] = useState(null);
 
   useEffect(() => {
-    setCrop({ x: 0, y: 0 });
-    setZoom(defaultZoom);
-    setRotation(0);
-    setCroppedAreaPixels(null);
-    setMode('free');
-    setBackground('transparent');
-    setCustomBackground('#ffffff');
+    const nextCrop = initialState?.crop ?? { x: 0, y: 0 };
+    setCrop(nextCrop);
+    setZoom(initialState?.zoom ?? defaultZoom);
+    setRotation(initialState?.rotation ?? 0);
+    setCroppedAreaPixels(initialState?.croppedAreaPixels ?? null);
+    setMode(initialState?.mode ?? 'free');
+    setBackground(initialState?.backgroundSelection ?? 'transparent');
+    setCustomBackground(initialState?.customBackground ?? '#ffffff');
+    setApplying(false);
     setError('');
-  }, [imageSrc]);
+  }, [imageSrc, initialState]);
 
   useEffect(() => {
     const element = containerRef.current;
@@ -331,7 +333,18 @@ function ImageEditor({ imageSrc, onClose, onApply }) {
           }
 
           const url = URL.createObjectURL(blob);
-          onApply({ url, blob, background: activeBackground, rotation, mode });
+          onApply({
+            url,
+            blob,
+            crop,
+            zoom,
+            rotation,
+            mode,
+            background: activeBackground,
+            backgroundSelection: background,
+            customBackground,
+            croppedAreaPixels
+          });
           setApplying(false);
         },
         'image/png',
@@ -345,7 +358,18 @@ function ImageEditor({ imageSrc, onClose, onApply }) {
       );
       setApplying(false);
     }
-  }, [activeBackground, croppedAreaPixels, imageSrc, mode, onApply, rotation]);
+  }, [
+    activeBackground,
+    background,
+    croppedAreaPixels,
+    crop,
+    customBackground,
+    imageSrc,
+    mode,
+    onApply,
+    rotation,
+    zoom
+  ]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
