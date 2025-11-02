@@ -74,7 +74,7 @@ function BackgroundRemovalTool() {
     setProgress(null);
 
     try {
-      const { default: removeBackground } = await import('@imgly/background-removal');
+      const { removeBackground } = await import('@imgly/background-removal');
       const blob = await removeBackground(file, {
         output: {
           format: 'image/png',
