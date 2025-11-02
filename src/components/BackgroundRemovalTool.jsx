@@ -22,11 +22,13 @@ const formatBytes = (value) => {
 
 function BackgroundRemovalTool() {
   const [sourceImage, setSourceImage] = useState(null);
-  const [resultImage, setResultImage] = useState(null);
+  const [processedImage, setProcessedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [progress, setProgress] = useState(null);
   const [error, setError] = useState('');
   const [editorOpen, setEditorOpen] = useState(false);
+  const [editorState, setEditorState] = useState(null);
 
   const progressLabel = useMemo(() => {
     if (!progress) {
@@ -48,10 +50,16 @@ function BackgroundRemovalTool() {
   }, [sourceImage?.url]);
 
   useEffect(() => () => {
-    if (resultImage?.url) {
-      URL.revokeObjectURL(resultImage.url);
+    if (processedImage?.url) {
+      URL.revokeObjectURL(processedImage.url);
     }
-  }, [resultImage?.url]);
+  }, [processedImage?.url]);
+
+  useEffect(() => () => {
+    if (previewImage?.url) {
+      URL.revokeObjectURL(previewImage.url);
+    }
+  }, [previewImage?.url]);
 
   const reset = useCallback(() => {
     setSourceImage((previous) => {
@@ -60,7 +68,13 @@ function BackgroundRemovalTool() {
       }
       return null;
     });
-    setResultImage((previous) => {
+    setProcessedImage((previous) => {
+      if (previous?.url) {
+        URL.revokeObjectURL(previous.url);
+      }
+      return null;
+    });
+    setPreviewImage((previous) => {
       if (previous?.url) {
         URL.revokeObjectURL(previous.url);
       }
@@ -69,6 +83,7 @@ function BackgroundRemovalTool() {
     setError('');
     setProgress(null);
     setEditorOpen(false);
+    setEditorState(null);
   }, []);
 
   const runBackgroundRemoval = useCallback(async (file) => {
@@ -89,31 +104,55 @@ function BackgroundRemovalTool() {
         }
       });
 
-      const url = URL.createObjectURL(blob);
-      setResultImage((previous) => {
+      const baseUrl = URL.createObjectURL(blob);
+      const previewUrl = URL.createObjectURL(blob);
+
+      setProcessedImage((previous) => {
         if (previous?.url) {
           URL.revokeObjectURL(previous.url);
         }
 
         return {
-          url,
+          url: baseUrl,
           size: blob.size,
           type: blob.type,
           blob
         };
       });
+
+      setPreviewImage((previous) => {
+        if (previous?.url) {
+          URL.revokeObjectURL(previous.url);
+        }
+
+        return {
+          url: previewUrl,
+          size: blob.size,
+          type: blob.type,
+          blob
+        };
+      });
+
+      setEditorState(null);
     } catch (processingError) {
       setError(
         processingError instanceof Error
           ? processingError.message
           : 'We could not remove the background from this image. Please try a different file.'
       );
-      setResultImage((previous) => {
+      setProcessedImage((previous) => {
         if (previous?.url) {
           URL.revokeObjectURL(previous.url);
         }
         return null;
       });
+      setPreviewImage((previous) => {
+        if (previous?.url) {
+          URL.revokeObjectURL(previous.url);
+        }
+        return null;
+      });
+      setEditorState(null);
     } finally {
       setProcessing(false);
       setProgress(null);
@@ -146,12 +185,19 @@ function BackgroundRemovalTool() {
         };
       });
 
-      setResultImage((previous) => {
+      setProcessedImage((previous) => {
         if (previous?.url) {
           URL.revokeObjectURL(previous.url);
         }
         return null;
       });
+      setPreviewImage((previous) => {
+        if (previous?.url) {
+          URL.revokeObjectURL(previous.url);
+        }
+        return null;
+      });
+      setEditorState(null);
 
       setError('');
       runBackgroundRemoval(file);
@@ -183,32 +229,43 @@ function BackgroundRemovalTool() {
   }, []);
 
   const downloadResult = useCallback(() => {
-    if (!resultImage) {
+    if (!previewImage) {
       return;
     }
 
     const link = document.createElement('a');
-    link.href = resultImage.url;
-    const extension = resultImage.type === 'image/png' ? 'png' : 'webp';
+    link.href = previewImage.url;
+    const extension = previewImage.type === 'image/png' ? 'png' : 'webp';
     link.download = `background-removed.${extension}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }, [resultImage]);
+  }, [previewImage]);
 
   const handleOpenEditor = useCallback(() => {
-    if (resultImage) {
+    if (processedImage) {
       setEditorOpen(true);
     }
-  }, [resultImage]);
+  }, [processedImage]);
 
   const handleCloseEditor = useCallback(() => {
     setEditorOpen(false);
   }, []);
 
   const handleApplyEdits = useCallback(
-    ({ url, blob }) => {
-      setResultImage((previous) => {
+    ({
+      url,
+      blob,
+      crop,
+      zoom,
+      rotation,
+      mode,
+      background,
+      backgroundSelection,
+      customBackground,
+      croppedAreaPixels
+    }) => {
+      setPreviewImage((previous) => {
         if (previous?.url) {
           URL.revokeObjectURL(previous.url);
         }
@@ -219,6 +276,18 @@ function BackgroundRemovalTool() {
           size: blob.size,
           type: 'image/png'
         };
+      });
+      setEditorState({
+        crop: { ...crop },
+        zoom,
+        rotation,
+        mode,
+        backgroundSelection,
+        background,
+        customBackground,
+        croppedAreaPixels: croppedAreaPixels
+          ? { ...croppedAreaPixels }
+          : null
       });
       setEditorOpen(false);
     },
@@ -290,8 +359,8 @@ function BackgroundRemovalTool() {
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-gray-700">Background removed</h2>
               <div className="flex items-center space-x-2 text-xs text-gray-500">
-                <span>{formatBytes(resultImage?.size)}</span>
-                {resultImage ? (
+                <span>{formatBytes(previewImage?.size)}</span>
+                {previewImage ? (
                   <button
                     type="button"
                     className="inline-flex items-center rounded-md border border-gray-300 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50"
@@ -303,14 +372,14 @@ function BackgroundRemovalTool() {
               </div>
             </div>
             <div className="flex min-h-[24rem] items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-white">
-              {resultImage ? (
+              {previewImage ? (
                 <button
                   type="button"
                   className="group relative flex h-full w-full items-center justify-center"
                   onClick={handleOpenEditor}
                 >
                   <img
-                    src={resultImage.url}
+                    src={previewImage.url}
                     alt="Background removed"
                     className="max-h-96 w-full object-contain transition group-hover:opacity-90"
                   />
@@ -358,8 +427,13 @@ function BackgroundRemovalTool() {
         </div>
       ) : null}
 
-      {editorOpen && resultImage ? (
-        <ImageEditor imageSrc={resultImage.url} onClose={handleCloseEditor} onApply={handleApplyEdits} />
+      {editorOpen && processedImage ? (
+        <ImageEditor
+          imageSrc={processedImage.url}
+          onClose={handleCloseEditor}
+          onApply={handleApplyEdits}
+          initialState={editorState}
+        />
       ) : null}
     </div>
   );
