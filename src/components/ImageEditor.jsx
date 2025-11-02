@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import { Circle, RotateCcw, RotateCw, Square, X } from 'lucide-react';
 import clsx from 'clsx';
@@ -18,8 +18,31 @@ const cropModes = [
 ];
 
 const defaultZoom = 1;
+const minCropSize = 120;
+const resizeCursorByHandle = {
+  n: 'ns',
+  s: 'ns',
+  e: 'ew',
+  w: 'ew',
+  ne: 'nesw',
+  sw: 'nesw',
+  nw: 'nwse',
+  se: 'nwse'
+};
+const resizeHandleLabels = {
+  n: 'top edge',
+  s: 'bottom edge',
+  e: 'right edge',
+  w: 'left edge',
+  ne: 'top-right corner',
+  nw: 'top-left corner',
+  se: 'bottom-right corner',
+  sw: 'bottom-left corner'
+};
 
 function ImageEditor({ imageSrc, onClose, onApply }) {
+  const containerRef = useRef(null);
+  const resizingRef = useRef(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(defaultZoom);
   const [rotation, setRotation] = useState(0);
@@ -29,6 +52,8 @@ function ImageEditor({ imageSrc, onClose, onApply }) {
   const [customBackground, setCustomBackground] = useState('#ffffff');
   const [applying, setApplying] = useState(false);
   const [error, setError] = useState('');
+  const [containerBounds, setContainerBounds] = useState({ width: 0, height: 0 });
+  const [cropSize, setCropSize] = useState(null);
 
   useEffect(() => {
     setCrop({ x: 0, y: 0 });
@@ -41,6 +66,67 @@ function ImageEditor({ imageSrc, onClose, onApply }) {
     setError('');
   }, [imageSrc]);
 
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) {
+      return undefined;
+    }
+
+    const updateBounds = () => {
+      const rect = element.getBoundingClientRect();
+      setContainerBounds({ width: rect.width, height: rect.height });
+    };
+
+    updateBounds();
+
+    const resizeObserver = new ResizeObserver(updateBounds);
+    resizeObserver.observe(element);
+    window.addEventListener('resize', updateBounds);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateBounds);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (mode !== 'free') {
+      setCropSize(null);
+      return;
+    }
+
+    if (!containerBounds.width || !containerBounds.height) {
+      return;
+    }
+
+    setCropSize((current) => {
+      if (current) {
+        const width = Math.min(
+          Math.max(current.width, minCropSize),
+          containerBounds.width
+        );
+        const height = Math.min(
+          Math.max(current.height, minCropSize),
+          containerBounds.height
+        );
+
+        if (width !== current.width || height !== current.height) {
+          return { width, height };
+        }
+
+        return current;
+      }
+
+      const initialWidth = Math.min(containerBounds.width * 0.8, containerBounds.width);
+      const initialHeight = Math.min(containerBounds.height * 0.8, containerBounds.height);
+
+      return {
+        width: Math.max(minCropSize, initialWidth),
+        height: Math.max(minCropSize, initialHeight)
+      };
+    });
+  }, [containerBounds.height, containerBounds.width, mode]);
+
   const aspect = useMemo(() => {
     if (mode === 'square' || mode === 'circle') {
       return 1;
@@ -49,9 +135,149 @@ function ImageEditor({ imageSrc, onClose, onApply }) {
     return undefined;
   }, [mode]);
 
+  const cropOverlay = useMemo(() => {
+    if (
+      mode !== 'free' ||
+      !cropSize ||
+      !containerBounds.width ||
+      !containerBounds.height
+    ) {
+      return null;
+    }
+
+    const left = (containerBounds.width - cropSize.width) / 2;
+    const top = (containerBounds.height - cropSize.height) / 2;
+
+    return {
+      left,
+      top,
+      width: cropSize.width,
+      height: cropSize.height
+    };
+  }, [containerBounds.height, containerBounds.width, cropSize, mode]);
+
+  const resizeHandles = useMemo(() => {
+    if (!cropOverlay) {
+      return [];
+    }
+
+    return [
+      { key: 'nw', x: 0, y: 0 },
+      { key: 'n', x: cropOverlay.width / 2, y: 0 },
+      { key: 'ne', x: cropOverlay.width, y: 0 },
+      { key: 'e', x: cropOverlay.width, y: cropOverlay.height / 2 },
+      { key: 'se', x: cropOverlay.width, y: cropOverlay.height },
+      { key: 's', x: cropOverlay.width / 2, y: cropOverlay.height },
+      { key: 'sw', x: 0, y: cropOverlay.height },
+      { key: 'w', x: 0, y: cropOverlay.height / 2 }
+    ];
+  }, [cropOverlay]);
+
   const handleCropComplete = useCallback((_, croppedPixels) => {
     setCroppedAreaPixels(croppedPixels);
   }, []);
+
+  const handlePointerMove = useCallback(
+    (event) => {
+      const state = resizingRef.current;
+      if (!state || mode !== 'free') {
+        return;
+      }
+
+      event.preventDefault();
+
+      const { startX, startY, startWidth, startHeight, direction } = state;
+      const deltaX = event.clientX - startX;
+      const deltaY = event.clientY - startY;
+
+      let nextWidth = startWidth;
+      let nextHeight = startHeight;
+
+      if (direction.includes('e')) {
+        nextWidth = startWidth + deltaX;
+      }
+
+      if (direction.includes('w')) {
+        nextWidth = startWidth - deltaX;
+      }
+
+      if (direction.includes('s')) {
+        nextHeight = startHeight + deltaY;
+      }
+
+      if (direction.includes('n')) {
+        nextHeight = startHeight - deltaY;
+      }
+
+      if (!containerBounds.width || !containerBounds.height) {
+        return;
+      }
+
+      const clampedWidth = Math.min(
+        Math.max(nextWidth, minCropSize),
+        containerBounds.width
+      );
+      const clampedHeight = Math.min(
+        Math.max(nextHeight, minCropSize),
+        containerBounds.height
+      );
+
+      setCropSize((current) => {
+        if (current && current.width === clampedWidth && current.height === clampedHeight) {
+          return current;
+        }
+
+        return {
+          width: clampedWidth,
+          height: clampedHeight
+        };
+      });
+    },
+    [containerBounds.height, containerBounds.width, mode]
+  );
+
+  const stopResizing = useCallback(() => {
+    resizingRef.current = null;
+    window.removeEventListener('pointermove', handlePointerMove);
+    window.removeEventListener('pointerup', stopResizing);
+  }, [handlePointerMove]);
+
+  const startResizing = useCallback(
+    (event, direction) => {
+      if (mode !== 'free' || !cropSize) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      resizingRef.current = {
+        startX: event.clientX,
+        startY: event.clientY,
+        startWidth: cropSize.width,
+        startHeight: cropSize.height,
+        direction
+      };
+
+      window.addEventListener('pointermove', handlePointerMove);
+      window.addEventListener('pointerup', stopResizing);
+    },
+    [cropSize, handlePointerMove, mode, stopResizing]
+  );
+
+  useEffect(
+    () => () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', stopResizing);
+    },
+    [handlePointerMove, stopResizing]
+  );
+
+  useEffect(() => {
+    if (mode !== 'free' && resizingRef.current) {
+      stopResizing();
+    }
+  }, [mode, stopResizing]);
 
   const handleRotation = useCallback((amount) => {
     setRotation((previous) => {
@@ -64,6 +290,19 @@ function ImageEditor({ imageSrc, onClose, onApply }) {
   }, []);
 
   const activeBackground = background === 'custom' ? customBackground : background;
+
+  const previewBackgroundStyle = useMemo(() => {
+    if (!activeBackground || activeBackground === 'transparent') {
+      return {
+        backgroundColor: '#111827',
+        backgroundImage:
+          'linear-gradient(45deg, rgba(255,255,255,0.12) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.12) 75%, transparent 75%, transparent)',
+        backgroundSize: '1.5rem 1.5rem'
+      };
+    }
+
+    return { background: activeBackground };
+  }, [activeBackground]);
 
   const handleApply = useCallback(async () => {
     if (!croppedAreaPixels) {
@@ -127,7 +366,11 @@ function ImageEditor({ imageSrc, onClose, onApply }) {
         </header>
 
         <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-5 lg:flex-row">
-          <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-900">
+          <div
+            ref={containerRef}
+            className="relative flex flex-1 items-center justify-center overflow-hidden rounded-xl border border-gray-200"
+            style={previewBackgroundStyle}
+          >
             <Cropper
               image={imageSrc}
               crop={crop}
@@ -136,13 +379,41 @@ function ImageEditor({ imageSrc, onClose, onApply }) {
               aspect={aspect}
               cropShape={mode === 'circle' ? 'round' : 'rect'}
               showGrid={mode !== 'circle'}
+              cropSize={mode === 'free' && cropSize ? cropSize : undefined}
               onCropChange={setCrop}
               onRotationChange={setRotation}
               onZoomChange={setZoom}
               onCropComplete={handleCropComplete}
               restrictPosition={false}
-              style={{ containerStyle: { background: '#111827' } }}
             />
+            {mode === 'free' && cropOverlay ? (
+              <div className="pointer-events-none absolute inset-0">
+                <div
+                  className="pointer-events-none absolute rounded-lg border border-white/70 shadow-[0_0_0_1px_rgba(17,24,39,0.6)]"
+                  style={{
+                    left: `${cropOverlay.left}px`,
+                    top: `${cropOverlay.top}px`,
+                    width: `${cropOverlay.width}px`,
+                    height: `${cropOverlay.height}px`
+                  }}
+                >
+                  {resizeHandles.map((handle) => (
+                    <button
+                      key={handle.key}
+                      type="button"
+                      className="pointer-events-auto absolute h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white bg-gray-900 shadow"
+                      style={{
+                        left: `${handle.x}px`,
+                        top: `${handle.y}px`,
+                        cursor: `${resizeCursorByHandle[handle.key]}-resize`
+                      }}
+                      onPointerDown={(event) => startResizing(event, handle.key)}
+                      aria-label={`Resize crop ${resizeHandleLabels[handle.key] || 'handle'}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <div className="w-full max-w-xs space-y-5">
