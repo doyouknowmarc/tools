@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  @keyframes count-confirmation {
+    0% {
+      transform: scale(1);
+    }
+    40% {
+      transform: scale(1.12);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .animate-count-confirmation {
+    animation: count-confirmation 0.2s ease-out;
+  }
+}
