@@ -22,6 +22,7 @@ import ContentToneAdjuster from './components/ContentToneAdjuster';
 import LocationDataTool from './components/LocationDataTool';
 import Base64Tool from './components/Base64Tool';
 import VotingTool from './components/VotingTool';
+import BackgroundRemovalTool from './components/BackgroundRemovalTool';
 
 function App() {
   // Active tool state
@@ -120,6 +121,8 @@ function App() {
                   ? 'QR Code Generator'
                   : activeTool === 'screenshot'
                   ? 'Screenshot Optimizer'
+                  : activeTool === 'backgroundremoval'
+                  ? 'Background Remover'
                   : activeTool === 'meetingprep'
                   ? 'Meeting Prep Assistant'
                   : activeTool === 'regex'
@@ -170,6 +173,8 @@ function App() {
               <QrCodeGenerator />
             ) : activeTool === 'screenshot' ? (
               <ScreenshotOptimizer />
+            ) : activeTool === 'backgroundremoval' ? (
+              <BackgroundRemovalTool />
             ) : activeTool === 'meetingprep' ? (
               <MeetingPrepAssistant />
             ) : activeTool === 'regex' ? (

@@ -20,7 +20,8 @@ import {
   MapPin,
   X,
   FileCode,
-  ThumbsUp
+  ThumbsUp,
+  Scissors
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -103,6 +104,19 @@ function Sidebar({
             >
               <Sparkles className="w-5 h-5" />
               <span className="font-medium">Screenshot Optimizer</span>
+            </button>
+
+            <button
+              className={clsx(
+                "w-full px-3 py-2 rounded-lg flex items-center space-x-3 transition-colors",
+                activeTool === 'backgroundremoval'
+                  ? "bg-gray-900 text-white hover:bg-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+              onClick={handleSelectTool('backgroundremoval')}
+            >
+              <Scissors className="w-5 h-5" />
+              <span className="font-medium">Background Remover</span>
             </button>
 
             <button
