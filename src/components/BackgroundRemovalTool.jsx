@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Download, Info, Loader2, RefreshCw, UploadCloud } from 'lucide-react';
 import clsx from 'clsx';
+import ImageEditor from './ImageEditor';
 
 const formatBytes = (value) => {
   if (!value) {
@@ -25,6 +26,7 @@ function BackgroundRemovalTool() {
   const [processing, setProcessing] = useState(false);
   const [progress, setProgress] = useState(null);
   const [error, setError] = useState('');
+  const [editorOpen, setEditorOpen] = useState(false);
 
   const progressLabel = useMemo(() => {
     if (!progress) {
@@ -66,6 +68,7 @@ function BackgroundRemovalTool() {
     });
     setError('');
     setProgress(null);
+    setEditorOpen(false);
   }, []);
 
   const runBackgroundRemoval = useCallback(async (file) => {
@@ -95,7 +98,8 @@ function BackgroundRemovalTool() {
         return {
           url,
           size: blob.size,
-          type: blob.type
+          type: blob.type,
+          blob
         };
       });
     } catch (processingError) {
@@ -192,6 +196,35 @@ function BackgroundRemovalTool() {
     document.body.removeChild(link);
   }, [resultImage]);
 
+  const handleOpenEditor = useCallback(() => {
+    if (resultImage) {
+      setEditorOpen(true);
+    }
+  }, [resultImage]);
+
+  const handleCloseEditor = useCallback(() => {
+    setEditorOpen(false);
+  }, []);
+
+  const handleApplyEdits = useCallback(
+    ({ url, blob }) => {
+      setResultImage((previous) => {
+        if (previous?.url) {
+          URL.revokeObjectURL(previous.url);
+        }
+
+        return {
+          url,
+          blob,
+          size: blob.size,
+          type: 'image/png'
+        };
+      });
+      setEditorOpen(false);
+    },
+    []
+  );
+
   return (
     <div className="space-y-6">
       <div
@@ -271,7 +304,22 @@ function BackgroundRemovalTool() {
             </div>
             <div className="flex min-h-[24rem] items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-white">
               {resultImage ? (
-                <img src={resultImage.url} alt="Background removed" className="max-h-96 w-full object-contain" />
+                <button
+                  type="button"
+                  className="group relative flex h-full w-full items-center justify-center"
+                  onClick={handleOpenEditor}
+                >
+                  <img
+                    src={resultImage.url}
+                    alt="Background removed"
+                    className="max-h-96 w-full object-contain transition group-hover:opacity-90"
+                  />
+                  <div className="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/40 to-transparent opacity-0 transition group-hover:opacity-100">
+                    <span className="mb-4 inline-flex items-center rounded-full bg-black/70 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                      Click to edit
+                    </span>
+                  </div>
+                </button>
               ) : (
                 <div className="flex flex-col items-center space-y-2 text-sm text-gray-500">
                   <Loader2 className={clsx('h-5 w-5', processing ? 'animate-spin text-gray-400' : 'text-gray-300')} />
@@ -308,6 +356,10 @@ function BackgroundRemovalTool() {
             <span>Start over</span>
           </button>
         </div>
+      ) : null}
+
+      {editorOpen && resultImage ? (
+        <ImageEditor imageSrc={resultImage.url} onClose={handleCloseEditor} onApply={handleApplyEdits} />
       ) : null}
     </div>
   );
