@@ -1,63 +1,76 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { saveAs } from 'file-saver';
 import Header from './Header';
 import UploadZone from './UploadZone';
 import ProcessingIndicator from './ProcessingIndicator';
 import Footer from './Footer';
 import { FileValidator } from './utils/fileValidator';
-import { OCRProcessor } from './utils/ocrProcessor';
 
 export default function OcrTool() {
   const [files, setFiles] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const processorRef = useRef(null);
 
-  const generateFileId = () => Math.random().toString(36).substring(2, 15);
-
-  const processFile = useCallback(async (file) => {
-    try {
-      setFiles((prev) =>
-        prev.map((f) =>
-          f.id === file.id ? { ...f, status: 'processing', progress: 0 } : f
-        )
-      );
-      const result = await OCRProcessor.processFile(
-        file.originalFile,
-        file.language || 'auto',
-        (progress) => {
-          setFiles((prev) =>
-            prev.map((f) => (f.id === file.id ? { ...f, progress } : f))
-          );
-        }
-      );
-      setFiles((prev) =>
-        prev.map((f) =>
-          f.id === file.id
-            ? {
-                ...f,
-                status: 'completed',
-                progress: 100,
-                ocrText: result.ocrText,
-                processedBlob: result.processedBlob,
-                pageTexts: result.pageTexts,
-              }
-            : f
-        )
-      );
-    } catch (error) {
-      console.error('Processing error:', error);
-      setFiles((prev) =>
-        prev.map((f) =>
-          f.id === file.id
-            ? {
-                ...f,
-                status: 'error',
-                error: error instanceof Error ? error.message : 'Processing failed',
-              }
-            : f
-        )
-      );
+  const loadProcessor = useCallback(async () => {
+    if (!processorRef.current) {
+      const module = await import('./utils/ocrProcessor');
+      processorRef.current = module.OCRProcessor;
     }
+
+    return processorRef.current;
   }, []);
+
+  const generateFileId = () => crypto.randomUUID();
+
+  const processFile = useCallback(
+    async (file) => {
+      try {
+        const OCRProcessor = await loadProcessor();
+        setFiles((prev) =>
+          prev.map((f) =>
+            f.id === file.id ? { ...f, status: 'processing', progress: 0 } : f
+          )
+        );
+        const result = await OCRProcessor.processFile(
+          file.originalFile,
+          file.language || 'auto',
+          (progress) => {
+            setFiles((prev) =>
+              prev.map((f) => (f.id === file.id ? { ...f, progress } : f))
+            );
+          }
+        );
+        setFiles((prev) =>
+          prev.map((f) =>
+            f.id === file.id
+              ? {
+                  ...f,
+                  status: 'completed',
+                  progress: 100,
+                  ocrText: result.ocrText,
+                  processedBlob: result.processedBlob,
+                  pageTexts: result.pageTexts,
+                }
+              : f
+          )
+        );
+      } catch (error) {
+        console.error('Processing error:', error);
+        setFiles((prev) =>
+          prev.map((f) =>
+            f.id === file.id
+              ? {
+                  ...f,
+                  status: 'error',
+                  error: error instanceof Error ? error.message : 'Processing failed',
+                }
+              : f
+          )
+        );
+      }
+    },
+    [loadProcessor]
+  );
 
   const handleFilesSelected = useCallback(
     async (selectedFiles, language) => {
@@ -96,7 +109,7 @@ export default function OcrTool() {
 
   useEffect(() => {
     return () => {
-      OCRProcessor.terminateWorker();
+      processorRef.current?.terminateWorker();
     };
   }, []);
 

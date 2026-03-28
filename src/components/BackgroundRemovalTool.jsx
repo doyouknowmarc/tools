@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { Download, Info, Loader2, RefreshCw, UploadCloud } from 'lucide-react';
 import clsx from 'clsx';
-import ImageEditor from './ImageEditor';
+
+const ImageEditor = lazy(() => import('./ImageEditor'));
 
 const formatBytes = (value) => {
   if (!value) {
@@ -428,12 +429,22 @@ function BackgroundRemovalTool() {
       ) : null}
 
       {editorOpen && processedImage ? (
-        <ImageEditor
-          imageSrc={processedImage.url}
-          onClose={handleCloseEditor}
-          onApply={handleApplyEdits}
-          initialState={editorState}
-        />
+        <Suspense
+          fallback={
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60">
+              <div className="rounded-xl bg-white px-4 py-3 text-sm text-gray-600 shadow-lg">
+                Loading editor…
+              </div>
+            </div>
+          }
+        >
+          <ImageEditor
+            imageSrc={processedImage.url}
+            onClose={handleCloseEditor}
+            onApply={handleApplyEdits}
+            initialState={editorState}
+          />
+        </Suspense>
       ) : null}
     </div>
   );

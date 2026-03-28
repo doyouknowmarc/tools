@@ -1,52 +1,23 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Star, Users, Trophy, RotateCcw } from 'lucide-react';
-
-const STORAGE_KEY = 'helpful-tools-voting-app';
-
-const SCHEMA_OPTIONS = {
-  '1-10': {
-    label: 'Score from 1 to 10',
-    values: Array.from({ length: 10 }, (_, index) => index + 1),
-  },
-  '5-stars': {
-    label: 'Five Star Rating',
-    values: Array.from({ length: 5 }, (_, index) => index + 1),
-  },
-};
-
-const defaultConfig = {
-  theme: '',
-  participantCount: 3,
-  rounds: 3,
-  schema: '1-10',
-  participantNames: ['Participant 1', 'Participant 2', 'Participant 3'],
-};
-
-const normalizeConfig = (input) => {
-  const participantCount = Math.max(1, Number(input.participantCount) || 1);
-  const rounds = Math.max(1, Number(input.rounds) || 1);
-  const schemaKey = SCHEMA_OPTIONS[input.schema] ? input.schema : '1-10';
-
-  const participantNames = Array.from({ length: participantCount }, (_, index) => {
-    const name = input.participantNames?.[index];
-    return name?.trim() ? name.trim() : `Participant ${index + 1}`;
-  });
-
-  return {
-    ...defaultConfig,
-    ...input,
-    participantCount,
-    rounds,
-    schema: schemaKey,
-    participantNames,
-  };
-};
-
-const createEmptyVotes = (rounds, participants) =>
-  Array.from({ length: rounds }, () => Array.from({ length: participants }, () => null));
+import { RotateCcw, Star, Trophy, Users } from 'lucide-react';
+import {
+  applyVoteSelection,
+  clearVotingSession,
+  createStartedVotingSession,
+  defaultVotingConfig,
+  getRemainingVotesInRound,
+  getRoundProgressLabel,
+  getVotingProgressAfterVote,
+  normalizeVotingConfig,
+  persistVotingSession,
+  restoreVotingSession,
+  sanitizeParticipantNames,
+  SCHEMA_OPTIONS,
+  validateVotingConfig,
+} from '../utils/votingSession';
 
 function VotingTool() {
-  const [config, setConfig] = useState(() => normalizeConfig(defaultConfig));
+  const [config, setConfig] = useState(() => normalizeVotingConfig(defaultVotingConfig));
   const [votes, setVotes] = useState([]);
   const [currentRound, setCurrentRound] = useState(0);
   const [currentParticipant, setCurrentParticipant] = useState(0);
@@ -56,67 +27,38 @@ function VotingTool() {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    const restoredState = restoreVotingSession();
+    if (!restoredState) {
       return;
     }
 
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (!stored) {
-      return;
-    }
-
-    try {
-      const parsed = JSON.parse(stored);
-      if (parsed.config) {
-        setConfig(normalizeConfig(parsed.config));
-      }
-      if (parsed.votes) {
-        setVotes(parsed.votes);
-      }
-      if (typeof parsed.currentRound === 'number') {
-        setCurrentRound(parsed.currentRound);
-      }
-      if (typeof parsed.currentParticipant === 'number') {
-        setCurrentParticipant(parsed.currentParticipant);
-      }
-      if (typeof parsed.isSessionActive === 'boolean') {
-        setIsSessionActive(parsed.isSessionActive);
-      }
-      if (typeof parsed.awaitingNextRound === 'boolean') {
-        setAwaitingNextRound(parsed.awaitingNextRound);
-      }
-      if (typeof parsed.sessionComplete === 'boolean') {
-        setSessionComplete(parsed.sessionComplete);
-      }
-    } catch (error) {
-      console.error('Failed to restore voting session from storage', error);
-    }
+    setConfig(restoredState.config);
+    setVotes(restoredState.votes);
+    setCurrentRound(restoredState.currentRound);
+    setCurrentParticipant(restoredState.currentParticipant);
+    setIsSessionActive(restoredState.isSessionActive);
+    setAwaitingNextRound(restoredState.awaitingNextRound);
+    setSessionComplete(restoredState.sessionComplete);
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const payload = {
-      config,
-      votes,
-      currentRound,
-      currentParticipant,
-      isSessionActive,
+    persistVotingSession({
       awaitingNextRound,
+      config,
+      currentParticipant,
+      currentRound,
+      isSessionActive,
       sessionComplete,
-    };
-
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      votes,
+    });
   }, [
-    config,
-    votes,
-    currentRound,
-    currentParticipant,
-    isSessionActive,
     awaitingNextRound,
+    config,
+    currentParticipant,
+    currentRound,
+    isSessionActive,
     sessionComplete,
+    votes,
   ]);
 
   const schema = SCHEMA_OPTIONS[config.schema] ?? SCHEMA_OPTIONS['1-10'];
@@ -145,17 +87,19 @@ function VotingTool() {
     });
   }, [config.participantNames, votes]);
 
-  const roundAverages = useMemo(() => {
-    return votes.map((roundVotes) => {
-      const filtered = roundVotes.filter((value) => value !== null);
-      if (!filtered.length) {
-        return null;
-      }
+  const roundAverages = useMemo(
+    () =>
+      votes.map((roundVotes) => {
+        const filtered = roundVotes.filter((value) => value !== null);
+        if (!filtered.length) {
+          return null;
+        }
 
-      const total = filtered.reduce((sum, value) => sum + value, 0);
-      return total / filtered.length;
-    });
-  }, [votes]);
+        const total = filtered.reduce((sum, value) => sum + value, 0);
+        return total / filtered.length;
+      }),
+    [votes]
+  );
 
   const topPerformerIndex = useMemo(() => {
     if (!perParticipantAverages.length) {
@@ -164,6 +108,7 @@ function VotingTool() {
 
     let bestIndex = null;
     let bestAverage = -Infinity;
+
     perParticipantAverages.forEach((average, index) => {
       if (average !== null && average > bestAverage) {
         bestAverage = average;
@@ -174,7 +119,8 @@ function VotingTool() {
     return bestIndex;
   }, [perParticipantAverages]);
 
-  const isConfigLocked = isSessionActive || votes.some((round) => round.some((vote) => vote !== null));
+  const isConfigLocked =
+    isSessionActive || votes.some((round) => round.some((vote) => vote !== null));
 
   const overallAverage = useMemo(() => {
     const flattened = votes.flat().filter((value) => value !== null);
@@ -187,58 +133,38 @@ function VotingTool() {
   }, [votes]);
 
   const handleConfigChange = (field, value) => {
-    setConfig((prev) => {
-      const next = { ...prev, [field]: value };
-      return normalizeConfig(next);
-    });
+    setConfig((previous) => normalizeVotingConfig({ ...previous, [field]: value }));
   };
 
   const handleParticipantNameChange = (index, value) => {
-    setConfig((prev) => {
-      const nextNames = [...prev.participantNames];
+    setConfig((previous) => {
+      const nextNames = [...previous.participantNames];
       nextNames[index] = value;
-      return { ...prev, participantNames: nextNames };
+      return { ...previous, participantNames: nextNames };
     });
   };
 
   const handleStartSession = () => {
-    const validationErrors = {};
-
-    if (!config.theme.trim()) {
-      validationErrors.theme = 'Please provide a theme for this voting session.';
-    }
-
-    if (config.participantCount < 1) {
-      validationErrors.participantCount = 'At least one participant is required.';
-    }
-
-    if (config.rounds < 1) {
-      validationErrors.rounds = 'Please set at least one round.';
-    }
-
-    if (!SCHEMA_OPTIONS[config.schema]) {
-      validationErrors.schema = 'Please choose a valid voting schema.';
-    }
-
+    const validationErrors = validateVotingConfig(config);
     if (Object.keys(validationErrors).length) {
       setErrors(validationErrors);
       return;
     }
 
+    const nextConfig = {
+      ...config,
+      participantNames: sanitizeParticipantNames(config.participantNames),
+    };
+    const nextSession = createStartedVotingSession(nextConfig);
+
     setErrors({});
-
-    const sanitizedNames = config.participantNames.map((name, index) => {
-      const fallback = `Participant ${index + 1}`;
-      return name?.trim() ? name.trim() : fallback;
-    });
-
-    setConfig((prev) => ({ ...prev, participantNames: sanitizedNames }));
-    setVotes(createEmptyVotes(config.rounds, config.participantCount));
-    setCurrentRound(0);
-    setCurrentParticipant(0);
-    setIsSessionActive(true);
-    setAwaitingNextRound(false);
-    setSessionComplete(false);
+    setConfig(nextConfig);
+    setVotes(nextSession.votes);
+    setCurrentRound(nextSession.currentRound);
+    setCurrentParticipant(nextSession.currentParticipant);
+    setIsSessionActive(nextSession.isSessionActive);
+    setAwaitingNextRound(nextSession.awaitingNextRound);
+    setSessionComplete(nextSession.sessionComplete);
   };
 
   const handleSubmitVote = (value) => {
@@ -246,65 +172,34 @@ function VotingTool() {
       return;
     }
 
-    setVotes((prev) => {
-      const next = prev.map((roundVotes) => [...roundVotes]);
-      next[currentRound][currentParticipant] = value;
-      return next;
+    const nextVotes = applyVoteSelection(votes, currentRound, currentParticipant, value);
+    const nextProgress = getVotingProgressAfterVote({
+      currentParticipant,
+      currentRound,
+      participantCount: config.participantCount,
+      rounds: config.rounds,
     });
 
-    setCurrentParticipant((prev) => {
-      if (prev + 1 < config.participantCount) {
-        return prev + 1;
-      }
-
-      return prev;
-    });
-
-    const isLastParticipant = currentParticipant + 1 >= config.participantCount;
-    const isFinalRound = currentRound + 1 >= config.rounds;
-
-    if (isLastParticipant) {
-      if (isFinalRound) {
-        setSessionComplete(true);
-        setIsSessionActive(false);
-        setCurrentParticipant(0);
-      } else {
-        setAwaitingNextRound(true);
-        setIsSessionActive(false);
-      }
-    }
-
-    if (!isLastParticipant) {
-      return;
-    }
+    setVotes(nextVotes);
+    setCurrentParticipant(nextProgress.currentParticipant);
+    setIsSessionActive(nextProgress.isSessionActive);
+    setAwaitingNextRound(nextProgress.awaitingNextRound);
+    setSessionComplete(nextProgress.sessionComplete);
   };
-
-  useEffect(() => {
-    if (!awaitingNextRound) {
-      return;
-    }
-
-    setCurrentParticipant(0);
-  }, [awaitingNextRound]);
-
-  useEffect(() => {
-    if (!sessionComplete) {
-      return;
-    }
-
-    setCurrentParticipant(0);
-  }, [sessionComplete]);
 
   const handleBeginNextRound = () => {
     if (!awaitingNextRound) {
       return;
     }
-    setCurrentRound((prev) => prev + 1);
+
+    setCurrentRound((previous) => previous + 1);
+    setCurrentParticipant(0);
     setAwaitingNextRound(false);
     setIsSessionActive(true);
   };
 
   const handleResetSession = () => {
+    clearVotingSession();
     setVotes([]);
     setCurrentRound(0);
     setCurrentParticipant(0);
@@ -312,30 +207,41 @@ function VotingTool() {
     setAwaitingNextRound(false);
     setSessionComplete(false);
     setErrors({});
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem(STORAGE_KEY);
-    }
-    setConfig(normalizeConfig(defaultConfig));
+    setConfig(normalizeVotingConfig(defaultVotingConfig));
   };
 
   const handleStartNewSession = () => {
-    setVotes(createEmptyVotes(config.rounds, config.participantCount));
-    setCurrentRound(0);
-    setCurrentParticipant(0);
-    setIsSessionActive(true);
-    setAwaitingNextRound(false);
-    setSessionComplete(false);
+    const nextConfig = {
+      ...config,
+      participantNames: sanitizeParticipantNames(config.participantNames),
+    };
+    const nextSession = createStartedVotingSession(nextConfig);
+
+    setConfig(nextConfig);
+    setVotes(nextSession.votes);
+    setCurrentRound(nextSession.currentRound);
+    setCurrentParticipant(nextSession.currentParticipant);
+    setIsSessionActive(nextSession.isSessionActive);
+    setAwaitingNextRound(nextSession.awaitingNextRound);
+    setSessionComplete(nextSession.sessionComplete);
   };
 
-  const remainingVotesInRound = useMemo(() => {
-    if (!votes.length) {
-      return config.participantCount;
-    }
-    const roundVotes = votes[currentRound] ?? [];
-    return roundVotes.filter((vote) => vote === null).length;
-  }, [config.participantCount, currentRound, votes]);
+  const remainingVotesInRound = useMemo(
+    () => getRemainingVotesInRound(votes, currentRound, config.participantCount),
+    [config.participantCount, currentRound, votes]
+  );
 
-  const nextParticipantName = config.participantNames[currentParticipant] || `Participant ${currentParticipant + 1}`;
+  const nextParticipantName =
+    config.participantNames[currentParticipant] || `Participant ${currentParticipant + 1}`;
+
+  const roundProgressLabel = getRoundProgressLabel({
+    awaitingNextRound,
+    currentRound,
+    hasVotes: votes.length > 0,
+    isSessionActive,
+    rounds: config.rounds,
+    sessionComplete,
+  });
 
   const renderRatingLabel = (value) => {
     if (config.schema === '5-stars') {
@@ -352,22 +258,14 @@ function VotingTool() {
     return <span className="text-sm font-medium">{value}</span>;
   };
 
-  const roundProgressLabel = sessionComplete
-    ? 'Voting completed'
-    : awaitingNextRound
-    ? `Round ${currentRound + 1} completed`
-    : isSessionActive
-    ? `Round ${currentRound + 1} of ${config.rounds}`
-    : votes.length
-    ? `Session paused at round ${currentRound + 1}`
-    : 'Ready to start';
-
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-semibold text-gray-900">Session Setup</h2>
-          <p className="text-sm text-gray-500">Configure your interactive voting session. All progress is saved locally.</p>
+          <p className="text-sm text-gray-500">
+            Configure your interactive voting session. All progress is saved locally.
+          </p>
         </div>
         <button
           type="button"
@@ -403,12 +301,16 @@ function VotingTool() {
                   min={1}
                   max={20}
                   value={config.participantCount}
-                  onChange={(event) => handleConfigChange('participantCount', Number(event.target.value))}
+                  onChange={(event) =>
+                    handleConfigChange('participantCount', Number(event.target.value))
+                  }
                   disabled={isConfigLocked}
                   className="w-full border-none bg-transparent text-sm focus:outline-none"
                 />
               </div>
-              {errors.participantCount ? <p className="mt-1 text-sm text-red-600">{errors.participantCount}</p> : null}
+              {errors.participantCount ? (
+                <p className="mt-1 text-sm text-red-600">{errors.participantCount}</p>
+              ) : null}
             </div>
 
             <div>
@@ -481,7 +383,9 @@ function VotingTool() {
         </div>
 
         <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
-          <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Live status</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-700">
+            Live status
+          </h3>
           <p className="mt-2 text-lg font-medium text-gray-900">{roundProgressLabel}</p>
           {config.theme ? <p className="text-sm text-gray-500">Theme: {config.theme}</p> : null}
 
@@ -501,8 +405,12 @@ function VotingTool() {
           {awaitingNextRound ? (
             <div className="mt-6 space-y-4">
               <div className="rounded-lg bg-white px-4 py-3 shadow-sm">
-                <p className="text-sm font-medium text-gray-800">Round {currentRound + 1} complete!</p>
-                <p className="text-sm text-gray-500">Review the results below and continue when you are ready.</p>
+                <p className="text-sm font-medium text-gray-800">
+                  Round {currentRound + 1} complete!
+                </p>
+                <p className="text-sm text-gray-500">
+                  Review the results below and continue when you are ready.
+                </p>
               </div>
               <button
                 type="button"

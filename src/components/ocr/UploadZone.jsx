@@ -6,8 +6,9 @@ import { getLastLanguage, saveLastLanguage } from './utils/languageOptions';
 
 export default function UploadZone({ onFilesSelected, isProcessing, acceptedFormats }) {
   const [isDragActive, setIsDragActive] = useState(false);
-  const [dragCounter, setDragCounter] = useState(0);
+  const [, setDragCounter] = useState(0);
   const [selectedLanguage, setSelectedLanguage] = useState(getLastLanguage());
+  const [validationErrors, setValidationErrors] = useState([]);
   const fileInputRef = useRef(null);
 
   const handleLanguageChange = useCallback((language) => {
@@ -52,7 +53,9 @@ export default function UploadZone({ onFilesSelected, isProcessing, acceptedForm
         const { validFiles, errors } = FileValidator.validateFiles(files);
         if (errors.length > 0) {
           console.warn('File validation errors:', errors);
-          alert('Some files were rejected:\n' + errors.join('\n'));
+          setValidationErrors(errors);
+        } else {
+          setValidationErrors([]);
         }
         if (validFiles.length > 0) {
           onFilesSelected(validFiles, selectedLanguage);
@@ -69,7 +72,9 @@ export default function UploadZone({ onFilesSelected, isProcessing, acceptedForm
         const { validFiles, errors } = FileValidator.validateFiles(files);
         if (errors.length > 0) {
           console.warn('File validation errors:', errors);
-          alert('Some files were rejected:\n' + errors.join('\n'));
+          setValidationErrors(errors);
+        } else {
+          setValidationErrors([]);
         }
         if (validFiles.length > 0) {
           onFilesSelected(validFiles, selectedLanguage);
@@ -172,6 +177,16 @@ export default function UploadZone({ onFilesSelected, isProcessing, acceptedForm
           </div>
         )}
       </div>
+      {validationErrors.length > 0 ? (
+        <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-left text-sm text-amber-800">
+          <p className="font-medium">Some files were rejected:</p>
+          <ul className="mt-2 list-disc space-y-1 pl-5">
+            {validationErrors.map((error) => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
       <div className="mt-6 text-center">
         <div className="text-sm text-gray-500 mb-2">
           Supported formats: {FileValidator.getSupportedTypesDisplay()}

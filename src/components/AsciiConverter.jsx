@@ -275,7 +275,7 @@ export default function AsciiConverter() {
       let imageData;
       try {
         imageData = ctx.getImageData(0, 0, img.width, img.height);
-      } catch (e) {
+      } catch {
         throw new Error('Failed to get image data. This might be a CORS issue.');
       }
       const data = imageData.data;
@@ -538,4 +538,3 @@ export default function AsciiConverter() {
     </div>
   );
 }
-

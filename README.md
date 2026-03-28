@@ -1,147 +1,141 @@
-# Multi-Tool Web Application
+# Helpful Tools
 
-A collection of useful web-based tools including a HEIC to JPG converter, text counter, and Pomodoro timer. All tools run locally in your browser without requiring server uploads.
+Helpful Tools is a React + Vite single-page app that bundles a growing set of browser-based utilities for image cleanup, text workflows, quick calculators, and small productivity helpers.
 
-## Features
+Most tools run entirely in the browser. The main optional integration is a locally running [Ollama](https://ollama.com) instance for AI-assisted writing features.
 
-### HEIC to JPG Converter
-- 🖼️ Convert HEIC/HEIF images to JPG format
-- 🔒 Privacy-focused: all processing happens in your browser
-- 💾 Batch download all converted images
+## Current toolset
 
-### Screenshot Optimizer
-- 🪄 Compress PNG/JPEG screenshots with quality presets
-- 📉 Compare original and optimised file sizes instantly
-- 🧼 Re-encode assets to strip metadata before sharing
+### Image and document tools
 
-### Meeting Prep Assistant
-- 🧭 Summarise agendas into clear objectives and prompts
-- ❓ Surface targeted questions based on meeting type
-- ✅ Generate actionable follow-up tasks ready to share
+- HEIC to JPG Converter
+- Screenshot Optimizer
+- Background Remover
+- Document OCR
 
-### Regex Tester & Explainer
-- 🔍 Highlight regex matches against sample text instantly
-- 🧠 Break patterns into human-friendly explanations
-- 🎛️ Toggle flags to explore different matching behaviours
+### Writing and text tools
 
-### Content Tone Adjuster
-- ✍️ Rephrase copy across formal, friendly, concise, and supportive tones
-- 📋 Copy ready-to-send rewrites with one click
-- 📊 Track word, sentence, and reading time changes instantly
+- Text Counter
+- Text Converter
+- Base64 Encoder & Decoder
+- Regex Tester & Explainer
+- Content Tone Adjuster
+- Meeting Prep Assistant
+- Mailto Link Generator
+- QR Code Generator
 
-### Base64 Encoder & Decoder
-- 🔁 Convert text between plain strings and Base64 with instant previews
-- 🖼️ Turn images into shareable Base64 data URLs and decode payloads back into files
-- 📋 Copy results or download decoded images in a single click
+### Productivity and utilities
 
-### Text Counter
-- 📝 Count characters, words, and sentences in text
-- 📊 Real-time statistics as you type
-- 🔍 Detailed breakdown of text metrics
+- Simple Counter
+- Pomodoro Timer
+- Local Voting Session
+- Public IP Address
+- Location Data Visualizer
 
-### Pomodoro Timer
-- ⏱️ Customizable work and break durations
-- 🔄 Automatic switching between work and break periods
-- 🔔 Audio notification when timer ends
+### Calculators and demos
 
-### Public IP Address
-- 🌐 Display your current public IP address
-- 🔄 Refresh the value with a single click
+- RAG Token Calculator
+- Token Production Rate Demo
+- ES RAM Calculator
 
-## Technology Stack
+## Tech stack
 
-- React.js for the UI
-- Vite as the build tool
-- TailwindCSS for styling
-- heic2any for HEIC conversion
-- react-dropzone for file uploads
+- React 18
+- Vite 5
+- Tailwind CSS
+- Vitest + Testing Library
+- ESLint
+- `heic2any` for HEIC conversion
+- `@imgly/background-removal` for local background removal
+- `tesseract.js`, `pdfjs-dist`, and `pdf-lib` for OCR and PDF handling
+- `leaflet` for map-based location visualisation
 
-## Development
+## Getting started
 
 ### Prerequisites
 
-- Node.js (v14 or newer)
-- npm or yarn
+- Node.js 18 or newer
+- npm
 
-### Setup
+### Install and run
 
 ```bash
-# Clone the repository
 git clone https://github.com/doyouknowmarc/tools.git
 cd tools
-
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
 ```
 
-### Build for Production
+The Vite dev server starts on `http://localhost:5173` by default.
+
+## Available scripts
 
 ```bash
-npm run build
+npm run dev        # start the local development server
+npm run build      # create a production build in dist/
+npm run preview    # preview the production build locally
+npm run lint       # run ESLint
+npm run test       # start Vitest in watch mode
+npm run test:run   # run the test suite once
 ```
 
-### Preview Production Build
+## Ollama integration
+
+The following tools can stream responses from a local Ollama server:
+
+- Content Tone Adjuster
+- Meeting Prep Assistant
+
+### Start Ollama for local development
+
+Allow the browser app to reach your Ollama instance:
 
 ```bash
-npm run preview
+OLLAMA_HOST=0.0.0.0:11434 OLLAMA_ORIGINS="http://localhost:5173"
+ollama serve
 ```
 
-## Connecting the AI tools to Ollama
+If you also use the GitHub Pages deployment, add both local and hosted origins to `~/.ollama/config`:
 
-The Tone Adjuster and Meeting Prep Assistant can call a locally running [Ollama](https://ollama.ai) instance for live rewrites and briefings.
+```toml
+[server]
+listen = "0.0.0.0:11434"
+origins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "https://doyouknowmarc.github.io"
+]
+```
 
-1. **Allow browser access** by launching Ollama with the following command (paste it straight into your terminal):
+Restart Ollama after updating the config file.
 
-   ```bash
-   OLLAMA_HOST=0.0.0.0:11434 OLLAMA_ORIGINS="https://doyouknowmarc.github.io"
-   ollama serve
-   ```
+### Verify the API
 
-   Swap the origin for your local dev URL (for example `http://localhost:5173`) if you are running the app from another host. You can also make the change permanent by adding the values to `~/.ollama/config`:
+```bash
+curl http://localhost:11434/api/tags
+```
 
-   ```toml
-   [server]
-   listen = "0.0.0.0:11434"
-   origins = [
-     "http://localhost:5173",
-     "http://127.0.0.1:5173"
-   ]
-   ```
+If no models are listed yet, pull one first with `ollama pull <model-name>`.
 
-   Restart Ollama after updating the configuration file.
+### Connect from the app
 
-3. **Verify the API is reachable**:
+1. Open either the Tone Adjuster or Meeting Prep tool.
+2. Enter the Ollama base URL, usually `http://localhost:11434`.
+3. Click `Refresh models`.
+4. Choose a model and start streaming rewrites or briefings.
 
-   ```bash
-   curl http://localhost:11434/api/tags
-   ```
+## Testing and deployment
 
-   The response should list the available models.
+The GitHub Actions workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) runs:
 
-4. **Load models inside the app** by entering the base URL (for example `http://localhost:11434`) in the Tone Adjuster or Meeting Prep panels and clicking **Refresh models**. Once connected, choose a model and trigger the rewrite/drafting buttons to call Ollama.
+1. `npm run lint`
+2. `npm run test:run`
+3. `npm run build`
 
-## Deployment to GitHub Pages
+If those steps pass on `main`, the generated `dist/` folder is deployed to GitHub Pages.
 
-This project is configured for easy deployment to GitHub Pages. Follow these steps:
-
-1. Create a GitHub repository for this project
-
-2. Push your code to the GitHub repository:
-   ```bash
-   git remote add origin https://github.com/doyouknowmarc/tools.git
-   git branch -M main
-   git push -u origin main
-   ```
-
-3. GitHub Actions will automatically build and deploy your site to GitHub Pages whenever you push to the main branch
-
-4. Go to your repository settings > Pages to check the deployment status
-
-5. Your site will be available at: `https://doyouknowmarc.github.io/tools/`
+The Vite base path is configured in [`vite.config.js`](vite.config.js) as `/tools/`, so if the repository name changes you should update that value before deploying.
 
 ## Contributing
 
-Contributions are welcome! Feel free to open issues or submit pull requests.
+Contributions are welcome. Open an issue or submit a pull request if you want to add a tool, improve an existing workflow, or tighten tests and docs.

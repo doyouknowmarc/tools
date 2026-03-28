@@ -129,7 +129,7 @@ export class OCRProcessor {
         .split('\n')
         .filter((line) => line.trim() && !line.startsWith('---'));
       pages.forEach((page, pageIndex) => {
-        const { width, height } = page.getSize();
+        const { height } = page.getSize();
         const fontSize = 8;
         const lineHeight = fontSize * 1.2;
         const maxLines = Math.floor(height / lineHeight) - 5;
@@ -166,4 +166,3 @@ export class OCRProcessor {
     }
   }
 }
-

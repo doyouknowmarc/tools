@@ -94,3 +94,49 @@ export async function readOllamaStream(response, onDelta) {
 
   return final;
 }
+
+export function normalizeOllamaHost(host) {
+  return host.trim().replace(/\/$/, '');
+}
+
+export async function fetchOllamaModels(host) {
+  if (!host) {
+    throw new Error('Enter the Ollama address to load models.');
+  }
+
+  const response = await fetch(`${host}/api/tags`);
+  if (!response.ok) {
+    throw new Error(`Model request failed with status ${response.status}`);
+  }
+
+  const data = await response.json();
+  if (!Array.isArray(data.models)) {
+    throw new Error('Unexpected response payload.');
+  }
+
+  return data.models;
+}
+
+export async function streamOllamaPrompt({ host, model, prompt, onDelta }) {
+  if (!host) {
+    throw new Error('Enter the Ollama address to load models.');
+  }
+
+  const response = await fetch(`${host}/api/generate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model,
+      prompt,
+      stream: true,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Generation failed with status ${response.status}`);
+  }
+
+  return readOllamaStream(response, onDelta);
+}

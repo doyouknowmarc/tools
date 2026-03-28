@@ -10,7 +10,13 @@ export default function PublicIp() {
     try {
       setLoading(true);
       const response = await fetch('https://api.ipify.org?format=json');
+      if (!response.ok) {
+        throw new Error(`IP request failed with status ${response.status}`);
+      }
       const data = await response.json();
+      if (!data?.ip) {
+        throw new Error('Unexpected IP response payload');
+      }
       setIp(data.ip);
       setError(null);
     } catch (err) {
@@ -30,6 +36,7 @@ export default function PublicIp() {
         {loading ? 'Loading...' : error ? error : ip}
       </div>
       <button
+        type="button"
         className="flex items-center space-x-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
         onClick={fetchIp}
       >

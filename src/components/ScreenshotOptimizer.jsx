@@ -161,6 +161,9 @@ function ScreenshotOptimizer() {
         setLoading(true);
         setError('');
         const response = await fetch(inputUrl);
+        if (!response.ok) {
+          throw new Error(`Image request failed with status ${response.status}`);
+        }
         const blob = await response.blob();
 
         if (!/image\/(png|jpeg)/.test(blob.type)) {
