@@ -1,0 +1,1 @@
+import{j as e}from"./index-B7CI_6NG.js";const t="mailto:doyouknowmarc@mail.com?subject=I%20suggest%20the%20following%20feature%20bla%20bla%20bla";function a(){return e.jsx("div",{className:"text-center",children:e.jsx("a",{href:t,className:"inline-flex rounded-lg bg-gray-900 px-4 py-2 text-white hover:bg-gray-800",children:"Suggest a Feature"})})}export{a as default};
