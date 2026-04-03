@@ -36,6 +36,11 @@ describe('App', () => {
       contentText: 'Upload Documents for OCR',
     },
     {
+      heading: 'Contour Segmenter',
+      sidebarLabel: 'Contour Segmenter',
+      contentText: 'Upload an image for contour segmentation',
+    },
+    {
       heading: 'Location Data Visualizer',
       sidebarLabel: 'Location Data',
       contentText: 'Upload your location data JSON file',

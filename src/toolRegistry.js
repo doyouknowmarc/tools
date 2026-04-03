@@ -10,6 +10,7 @@ import {
   Hash,
   HelpCircle,
   ImagePlus,
+  Layers,
   Mail,
   MapPin,
   PenLine,
@@ -67,6 +68,13 @@ export const toolRegistry = [
     sidebarLabel: 'Background Remover',
     icon: Scissors,
     loader: () => import('./components/BackgroundRemovalTool'),
+  }),
+  createTool({
+    id: 'contoursegmenter',
+    title: 'Contour Segmenter',
+    sidebarLabel: 'Contour Segmenter',
+    icon: Layers,
+    loader: () => import('./components/ContourSegmenter'),
   }),
   createTool({
     id: 'textcounter',

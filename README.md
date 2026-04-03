@@ -11,6 +11,7 @@ Most tools run entirely in the browser. The main optional integration is a local
 - HEIC to JPG Converter
 - Screenshot Optimizer
 - Background Remover
+- Contour Segmenter
 - Document OCR
 
 ### Writing and text tools
@@ -47,6 +48,7 @@ Most tools run entirely in the browser. The main optional integration is a local
 - ESLint
 - `heic2any` for HEIC conversion
 - `@imgly/background-removal` for local background removal
+- browser canvas and pixel-processing utilities for contour-based segmentation
 - `tesseract.js`, `pdfjs-dist`, and `pdf-lib` for OCR and PDF handling
 - `leaflet` for map-based location visualisation
 
