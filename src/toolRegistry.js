@@ -14,6 +14,7 @@ import {
   Mail,
   MapPin,
   PenLine,
+  Pipette,
   QrCode,
   RefreshCw,
   ScanText,
@@ -147,6 +148,13 @@ export const toolRegistry = [
     icon: Wand2,
     maxWidthClass: 'max-w-6xl xl:max-w-7xl',
     loader: () => import('./components/ContentToneAdjuster'),
+  }),
+  createTool({
+    id: 'colorpicker',
+    title: 'Color Picker',
+    sidebarLabel: 'Color Picker',
+    icon: Pipette,
+    loader: () => import('./components/ColorPickerTool'),
   }),
   createTool({
     id: 'qrcode',
