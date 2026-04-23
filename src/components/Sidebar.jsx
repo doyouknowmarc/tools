@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Mail, X } from 'lucide-react';
 import clsx from 'clsx';
-import { CONTACT_MARC_HREF, sidebarTools } from '../toolRegistry';
+import { sidebarTools } from '../toolRegistry';
+import IdeaModal from './IdeaModal';
 
 function Sidebar({
   activeTool,
@@ -11,6 +12,8 @@ function Sidebar({
   showCloseButton,
   onClose,
 }) {
+  const [isIdeaModalOpen, setIsIdeaModalOpen] = useState(false);
+
   const handleSelectTool = (toolId) => () => {
     onSelectTool(toolId);
     onNavigate?.();
@@ -76,16 +79,21 @@ function Sidebar({
 
         <div className="mt-auto p-4">
           <div className="space-y-2 border-t border-gray-200 pt-4">
-            <a
-              href={CONTACT_MARC_HREF}
+            <button
+              type="button"
               className="group flex w-full items-center space-x-3 rounded-lg px-3 py-2 text-gray-600 transition-colors hover:bg-gray-50"
-              onClick={() => onNavigate?.()}
+              onClick={() => {
+                onNavigate?.();
+                setIsIdeaModalOpen(true);
+              }}
             >
               <Mail className="h-5 w-5 text-gray-400 group-hover:text-gray-500" />
               <span className="font-medium">Contact Marc</span>
-            </a>
+            </button>
           </div>
         </div>
+
+        {isIdeaModalOpen && <IdeaModal onClose={() => setIsIdeaModalOpen(false)} />}
       </div>
     </div>
   );
