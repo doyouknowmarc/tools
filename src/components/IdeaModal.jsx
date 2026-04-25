@@ -6,13 +6,17 @@ const IDEA_EMAIL = 'myapplemarc@gmail.com';
 export default function IdeaModal({ onClose }) {
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
+  const [notifyEmail, setNotifyEmail] = useState('');
 
   const handleSend = useCallback(() => {
     const fullSubject = `[Idea] ${subject.trim()}`;
-    const mailtoUrl = `mailto:${IDEA_EMAIL}?subject=${encodeURIComponent(fullSubject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoUrl;
+    const fullBody = notifyEmail.trim()
+      ? `${body}\n\nNotify-Email: ${notifyEmail.trim()}`
+      : body;
+    const mailtoUrl = `mailto:${IDEA_EMAIL}?subject=${encodeURIComponent(fullSubject)}&body=${encodeURIComponent(fullBody)}`;
+    window.open(mailtoUrl);
     onClose();
-  }, [subject, body, onClose]);
+  }, [subject, body, notifyEmail, onClose]);
 
   const handleKeyDown = useCallback(
     (e) => {
@@ -71,6 +75,21 @@ export default function IdeaModal({ onClose }) {
               onChange={(e) => setBody(e.target.value)}
               placeholder="Describe your idea in as much detail as you like…"
               rows={5}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="idea-notify-email" className="mb-1.5 block text-sm font-medium text-gray-700">
+              Notify me when implemented{' '}
+              <span className="font-normal text-gray-400">(optional)</span>
+            </label>
+            <input
+              id="idea-notify-email"
+              type="email"
+              value={notifyEmail}
+              onChange={(e) => setNotifyEmail(e.target.value)}
+              placeholder="your@email.com"
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
             />
           </div>
