@@ -1,0 +1,29 @@
+name: Notify Submitter on Implementation
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  notify:
+    if: github.event.label.name == 'implemented'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract submitter email
+        id: extract
+        run: |
+          EMAIL=$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=\*\*Submitter email:\*\* ).+' | tr -d '\r' | head -1)
+          echo "email=$EMAIL" >> "$GITHUB_OUTPUT"
+
+      - name: Send notification email
+        if: steps.extract.outputs.email != ''
+        run: |
+          curl -s -X POST https://api.resend.com/emails \
+            -H "Authorization: Bearer ${{ secrets.RESEND_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "from": "Helpful Tools <noreply@doyouknowmarc.com>",
+              "to": ["${{ steps.extract.outputs.email }}"],
+              "subject": "Your idea just got implemented!",
+              "html": "<p>Hey! 👋</p><p>Your idea — <strong>${{ github.event.issue.title }}</strong> — just got implemented in <a href=\"https://doyouknowmarc.github.io/tools/\">Helpful Tools</a>.</p><p>Check it out and give it a try. Thanks for the suggestion!</p><p>— Marc</p>"
+            }'
