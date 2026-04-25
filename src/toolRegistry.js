@@ -17,6 +17,7 @@ import {
   Pipette,
   QrCode,
   RefreshCw,
+  Scale,
   ScanText,
   Scissors,
   Sparkles,
@@ -207,6 +208,15 @@ export const toolRegistry = [
     maxWidthClass: 'max-w-none',
     showInSidebar: false,
     loader: () => import('./components/stakeholder/StakeholderTool'),
+  }),
+  createTool({
+    id: 'proconlist',
+    title: 'Pro & Con List',
+    sidebarLabel: 'Pro & Con List',
+    icon: Scale,
+    maxWidthClass: 'max-w-4xl',
+    showInSidebar: true,
+    loader: () => import('./components/ProConListTool'),
   }),
   createTool({
     id: 'comingsoon',
