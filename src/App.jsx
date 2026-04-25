@@ -12,7 +12,7 @@ function App() {
   const ActiveToolComponent = activeToolConfig.Component;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50 lg:flex-row">
+    <div className="flex h-screen flex-col bg-gray-50 lg:flex-row">
       <div
         className={clsx(
           'fixed inset-0 z-40 flex transition-opacity duration-300 lg:hidden',
@@ -49,7 +49,7 @@ function App() {
         />
       </div>
 
-      <div className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+      <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
         <div className={clsx('mx-auto w-full', activeToolConfig.maxWidthClass)}>
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
