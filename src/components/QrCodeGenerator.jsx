@@ -47,20 +47,23 @@ function isValidEmail(value) {
   return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(value);
 }
 
+function encodeMailtoValue(value) {
+  return encodeURIComponent(value.replace(/\r?\n/g, '\r\n'));
+}
+
 function formatEmailPayload({ to, subject, body }) {
   const email = encodeURIComponent(to);
-  const params = new URLSearchParams();
+  const parts = [];
 
   if (subject) {
-    params.set('subject', subject);
+    parts.push(`subject=${encodeMailtoValue(subject)}`);
   }
 
   if (body) {
-    params.set('body', body);
+    parts.push(`body=${encodeMailtoValue(body)}`);
   }
 
-  const query = params.toString();
-
+  const query = parts.join('&');
   return query ? `mailto:${email}?${query}` : `mailto:${email}`;
 }
 
@@ -534,6 +537,8 @@ const QrCodeGenerator = () => {
           {generatedCodes.map((code, index) => (
             <div
               key={`${code.value}-${index}`}
+              data-testid="qr-code-card"
+              data-payload={code.value}
               className="border border-gray-200 rounded-lg p-4 space-y-4 flex flex-col items-center"
             >
               <QRCodeCanvas
