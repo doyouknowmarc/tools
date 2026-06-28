@@ -24,6 +24,7 @@ Most tools run entirely in the browser. The main optional integration is a local
 - Meeting Prep Assistant
 - Mailto Link Generator
 - QR Code Generator
+- Pro & Con List
 
 ### Productivity and utilities
 
@@ -32,6 +33,8 @@ Most tools run entirely in the browser. The main optional integration is a local
 - Local Voting Session
 - Public IP Address
 - Location Data Visualizer
+- Color Picker
+- Coming Soon placeholder
 
 ### Calculators and demos
 
@@ -42,9 +45,10 @@ Most tools run entirely in the browser. The main optional integration is a local
 ## Tech stack
 
 - React 18
-- Vite 5
+- Vite 7
 - Tailwind CSS
 - Vitest + Testing Library
+- Playwright for browser and screenshot coverage
 - ESLint
 - `heic2any` for HEIC conversion
 - `@imgly/background-removal` for local background removal
@@ -56,7 +60,7 @@ Most tools run entirely in the browser. The main optional integration is a local
 
 ### Prerequisites
 
-- Node.js 18 or newer
+- Node.js 20.19 or newer, or Node.js 22.12 or newer
 - npm
 
 ### Install and run
@@ -128,6 +132,17 @@ If no models are listed yet, pull one first with `ollama pull <model-name>`.
 
 ## Testing and deployment
 
+The test suite includes smoke coverage for every visible sidebar tool, plus focused
+regression tests for upload size/type validation, safe regex match rendering, and
+transparent-image preview behavior.
+
+Security-related guardrails currently covered:
+
+- image processing tools reject unsupported or oversized uploads before expensive browser work
+- Base64 image decoding rejects unsupported data URL MIME types and oversized decoded payloads
+- the regex tester renders matches with React nodes instead of injected HTML
+- dependency audit is expected to report zero known vulnerabilities
+
 The GitHub Actions workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) runs:
 
 1. `npm run lint`
@@ -137,6 +152,37 @@ The GitHub Actions workflow in [`.github/workflows/deploy.yml`](.github/workflow
 If those steps pass on `main`, the generated `dist/` folder is deployed to GitHub Pages.
 
 The Vite base path is configured in [`vite.config.js`](vite.config.js) as `/tools/`, so if the repository name changes you should update that value before deploying.
+
+## Tool screenshots
+
+Each visible sidebar tool has a current desktop screenshot in [`docs/screenshots`](docs/screenshots).
+
+| Tool | Screenshot |
+| --- | --- |
+| Simple Counter | ![Simple Counter](docs/screenshots/01-simple-counter.jpg) |
+| HEIC to JPG | ![HEIC to JPG](docs/screenshots/02-heic-to-jpg.jpg) |
+| Screenshot Optimizer | ![Screenshot Optimizer](docs/screenshots/03-screenshot-optimizer.jpg) |
+| Background Remover | ![Background Remover](docs/screenshots/04-background-remover.jpg) |
+| Contour Segmenter | ![Contour Segmenter](docs/screenshots/05-contour-segmenter.jpg) |
+| Text Counter | ![Text Counter](docs/screenshots/06-text-counter.jpg) |
+| Converter | ![Converter](docs/screenshots/07-converter.jpg) |
+| Base64 Tool | ![Base64 Tool](docs/screenshots/08-base64-tool.jpg) |
+| Pomodoro Timer | ![Pomodoro Timer](docs/screenshots/09-pomodoro-timer.jpg) |
+| Meeting Prep | ![Meeting Prep](docs/screenshots/10-meeting-prep.jpg) |
+| Voting Session | ![Voting Session](docs/screenshots/11-voting-session.jpg) |
+| Public IP | ![Public IP](docs/screenshots/12-public-ip.jpg) |
+| Location Data | ![Location Data](docs/screenshots/13-location-data.jpg) |
+| Mailto Link | ![Mailto Link](docs/screenshots/14-mailto-link.jpg) |
+| Tone Adjuster | ![Tone Adjuster](docs/screenshots/15-tone-adjuster.jpg) |
+| Color Picker | ![Color Picker](docs/screenshots/16-color-picker.jpg) |
+| QR Codes | ![QR Codes](docs/screenshots/17-qr-codes.jpg) |
+| Document OCR | ![Document OCR](docs/screenshots/18-document-ocr.jpg) |
+| RAG Calculator | ![RAG Calculator](docs/screenshots/19-rag-calculator.jpg) |
+| Regex Tester | ![Regex Tester](docs/screenshots/20-regex-tester.jpg) |
+| Token Rate Demo | ![Token Rate Demo](docs/screenshots/21-token-rate-demo.jpg) |
+| ES RAM Calculator | ![ES RAM Calculator](docs/screenshots/22-es-ram-calculator.jpg) |
+| Pro & Con List | ![Pro & Con List](docs/screenshots/23-pro-and-con-list.jpg) |
+| Coming Soon | ![Coming Soon](docs/screenshots/24-coming-soon.jpg) |
 
 ## Contributing
 

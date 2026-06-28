@@ -35,32 +35,47 @@ const TOKEN_HELP = {
 };
 
 const DEFAULT_SAMPLE = `Example input:\n- Ticket ABC-123 assigned to alice@example.com\n- Ticket XYZ-9 waiting on QA`;
+const MAX_RENDERED_MATCHES = 200;
 
-function escapeHtml(text) {
-  return text.replace(/[&<>]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[char]));
-}
+function getHighlightedSegments(sample, regex) {
+  if (!regex || !sample) {
+    return [{ text: sample, highlighted: false }];
+  }
 
-function highlightMatches(sample, regex) {
-  if (!regex || !sample) return sample;
+  const segments = [];
   let lastIndex = 0;
-  let result = '';
   const text = sample;
   const globalRegex = regex.global ? regex : new RegExp(regex.source, regex.flags.includes('g') ? regex.flags : `${regex.flags}g`);
   globalRegex.lastIndex = 0;
   let match;
+  let count = 0;
+
   while ((match = globalRegex.exec(text)) !== null) {
+    if (count >= MAX_RENDERED_MATCHES) {
+      break;
+    }
+
     const start = match.index;
     const end = start + (match[0]?.length ?? 0);
-    const before = escapeHtml(text.slice(lastIndex, start));
-    const content = escapeHtml(text.slice(start, end));
-    result += `${before}<mark class="bg-amber-200 px-0.5 rounded">${content}</mark>`;
+
+    if (start > lastIndex) {
+      segments.push({ text: text.slice(lastIndex, start), highlighted: false });
+    }
+
+    segments.push({ text: text.slice(start, end), highlighted: true });
     lastIndex = end;
+    count += 1;
+
     if (match[0]?.length === 0) {
       globalRegex.lastIndex += 1;
     }
   }
-  result += escapeHtml(text.slice(lastIndex));
-  return result;
+
+  if (lastIndex < text.length) {
+    segments.push({ text: text.slice(lastIndex), highlighted: false });
+  }
+
+  return segments;
 }
 
 function tokenizePattern(pattern) {
@@ -127,13 +142,13 @@ function RegexTester() {
     return list;
   }, [regex, sample]);
 
-  const highlightedSample = useMemo(() => {
-    if (!regex) return escapeHtml(sample);
+  const highlightedSegments = useMemo(() => {
+    if (!regex) return [{ text: sample, highlighted: false }];
     try {
-      return highlightMatches(sample, regex);
+      return getHighlightedSegments(sample, regex);
     } catch (highlightError) {
       console.error('Failed to highlight matches', highlightError);
-      return escapeHtml(sample);
+      return [{ text: sample, highlighted: false }];
     }
   }, [regex, sample]);
 
@@ -150,11 +165,15 @@ function RegexTester() {
       <div className="grid gap-6 lg:grid-cols-5">
         <section className="lg:col-span-2 rounded-xl border border-gray-200 p-4 space-y-4">
           <div>
-            <label className="text-sm font-semibold text-gray-900 flex items-center space-x-2">
+            <label
+              htmlFor="regex-pattern"
+              className="text-sm font-semibold text-gray-900 flex items-center space-x-2"
+            >
               <Braces className="h-4 w-4" />
               <span>Regular expression</span>
             </label>
             <input
+              id="regex-pattern"
               value={pattern}
               onChange={(event) => setPattern(event.target.value)}
               className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono focus:border-gray-400 focus:outline-none"
@@ -185,8 +204,11 @@ function RegexTester() {
           </div>
 
           <div>
-            <label className="text-sm font-semibold text-gray-900">Sample text</label>
+            <label htmlFor="regex-sample" className="text-sm font-semibold text-gray-900">
+              Sample text
+            </label>
             <textarea
+              id="regex-sample"
               value={sample}
               onChange={(event) => setSample(event.target.value)}
               rows={10}
@@ -216,7 +238,19 @@ function RegexTester() {
 
             {!error && (
               <>
-                <div className="mt-4 rounded-lg border border-dashed border-gray-200 bg-gray-50/60 p-3 text-sm text-gray-700 font-mono leading-relaxed" dangerouslySetInnerHTML={{ __html: highlightedSample }} />
+                <div className="mt-4 whitespace-pre-wrap rounded-lg border border-dashed border-gray-200 bg-gray-50/60 p-3 font-mono text-sm leading-relaxed text-gray-700">
+                  {highlightedSegments.map((segment, index) =>
+                    segment.highlighted ? (
+                      <mark key={`${segment.text}-${index}`} className="rounded bg-amber-200 px-0.5">
+                        {segment.text}
+                      </mark>
+                    ) : (
+                      <React.Fragment key={`${segment.text}-${index}`}>
+                        {segment.text}
+                      </React.Fragment>
+                    )
+                  )}
+                </div>
 
                 <div className="mt-4 space-y-3 text-sm text-gray-700">
                   {matches.length === 0 ? (

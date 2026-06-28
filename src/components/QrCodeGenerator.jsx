@@ -16,9 +16,7 @@ function sanitizeUrls(rawInput) {
 function validateUrl(url) {
   try {
     // The URL constructor will throw if it cannot parse the string.
-    // eslint-disable-next-line no-new
-    new URL(url);
-    return true;
+    return Boolean(new URL(url));
   } catch (error) {
     return false;
   }

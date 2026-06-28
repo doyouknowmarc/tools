@@ -1,6 +1,42 @@
 import React, { useState, useMemo } from 'react';
 import { Calculator, DollarSign, Search, Layers, Zap, BarChart3, ArrowRight } from 'lucide-react';
 
+const scenarios = {
+  low: {
+    userQuery: 8,
+    chunkSize: 300,
+    numChunks: 10,
+    topKChunks: 3,
+    reRankOverhead: 50,
+    reRankOutputTokens: 30,
+    ragSystemPrompt: 100,
+    finalAnswerTokens: 150,
+    description: 'Simple queries, small chunks, minimal context'
+  },
+  medium: {
+    userQuery: 25,
+    chunkSize: 600,
+    numChunks: 15,
+    topKChunks: 4,
+    reRankOverhead: 100,
+    reRankOutputTokens: 50,
+    ragSystemPrompt: 150,
+    finalAnswerTokens: 300,
+    description: 'Typical business queries with moderate context'
+  },
+  high: {
+    userQuery: 60,
+    chunkSize: 1200,
+    numChunks: 20,
+    topKChunks: 5,
+    reRankOverhead: 200,
+    reRankOutputTokens: 80,
+    ragSystemPrompt: 200,
+    finalAnswerTokens: 800,
+    description: 'Complex queries, large chunks, extensive context'
+  }
+};
+
 const RAGTokenCalculator = () => {
   const [scenario, setScenario] = useState('medium');
   const [customValues, setCustomValues] = useState({
@@ -16,47 +52,17 @@ const RAGTokenCalculator = () => {
     outputTokenPrice: 8
   });
 
-  const scenarios = {
-    low: {
-      userQuery: 8,
-      chunkSize: 300,
-      numChunks: 10,
-      topKChunks: 3,
-      reRankOverhead: 50,
-      reRankOutputTokens: 30,
-      ragSystemPrompt: 100,
-      finalAnswerTokens: 150,
-      description: 'Simple queries, small chunks, minimal context'
-    },
-    medium: {
-      userQuery: 25,
-      chunkSize: 600,
-      numChunks: 15,
-      topKChunks: 4,
-      reRankOverhead: 100,
-      reRankOutputTokens: 50,
-      ragSystemPrompt: 150,
-      finalAnswerTokens: 300,
-      description: 'Typical business queries with moderate context'
-    },
-    high: {
-      userQuery: 60,
-      chunkSize: 1200,
-      numChunks: 20,
-      topKChunks: 5,
-      reRankOverhead: 200,
-      reRankOutputTokens: 80,
-      ragSystemPrompt: 200,
-      finalAnswerTokens: 800,
-      description: 'Complex queries, large chunks, extensive context'
-    }
-  };
-
-  const currentValues = scenario === 'custom' ? customValues : {
-    ...scenarios[scenario],
-    inputTokenPrice: customValues.inputTokenPrice,
-    outputTokenPrice: customValues.outputTokenPrice
-  };
+  const currentValues = useMemo(
+    () =>
+      scenario === 'custom'
+        ? customValues
+        : {
+            ...scenarios[scenario],
+            inputTokenPrice: customValues.inputTokenPrice,
+            outputTokenPrice: customValues.outputTokenPrice
+          },
+    [customValues, scenario]
+  );
 
   const calculations = useMemo(() => {
     const {

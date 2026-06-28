@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import App from './App';
+import { sidebarTools } from './toolRegistry';
 
 function getSidebarButton(label) {
   return screen.getAllByRole('button', { name: label })[0];
@@ -54,5 +55,23 @@ describe('App', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: heading })).toBeInTheDocument();
     expect(await screen.findByText(contentText)).toBeInTheDocument();
+  });
+
+  it('shows every sidebar-visible tool and updates the active heading for each one', async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    for (const tool of sidebarTools) {
+      expect(screen.getAllByRole('button', { name: tool.sidebarLabel }).length).toBeGreaterThan(0);
+    }
+
+    for (const tool of sidebarTools) {
+      await user.click(getSidebarButton(tool.sidebarLabel));
+
+      expect(
+        await screen.findByRole('heading', { level: 1, name: tool.title })
+      ).toBeInTheDocument();
+    }
   });
 });

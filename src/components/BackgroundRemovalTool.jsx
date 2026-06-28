@@ -3,6 +3,10 @@ import { Download, Info, Loader2, RefreshCw, UploadCloud } from 'lucide-react';
 import clsx from 'clsx';
 
 const ImageEditor = lazy(() => import('./ImageEditor'));
+const MAX_IMAGE_SIZE_BYTES = 25 * 1024 * 1024;
+const acceptedMimeTypes = ['image/png', 'image/jpeg', 'image/webp'];
+const transparentPreviewClass =
+  'bg-gray-100 [background-image:linear-gradient(45deg,#e5e7eb_25%,transparent_25%,transparent_75%,#e5e7eb_75%),linear-gradient(45deg,#e5e7eb_25%,transparent_25%,transparent_75%,#e5e7eb_75%)] [background-position:0_0,12px_12px] [background-size:24px_24px]';
 
 const formatBytes = (value) => {
   if (!value) {
@@ -166,8 +170,13 @@ function BackgroundRemovalTool() {
         return;
       }
 
-      if (!file.type.startsWith('image/')) {
+      if (!acceptedMimeTypes.includes(file.type)) {
         setError('Please choose an image file (PNG, JPEG, or WebP).');
+        return;
+      }
+
+      if (file.size > MAX_IMAGE_SIZE_BYTES) {
+        setError('Please choose an image up to 25 MB.');
         return;
       }
 
@@ -372,7 +381,12 @@ function BackgroundRemovalTool() {
                 ) : null}
               </div>
             </div>
-            <div className="flex min-h-[24rem] items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-white">
+            <div
+              className={clsx(
+                'flex min-h-[24rem] items-center justify-center overflow-hidden rounded-xl border border-gray-200',
+                previewImage ? transparentPreviewClass : 'bg-white'
+              )}
+            >
               {previewImage ? (
                 <button
                   type="button"

@@ -136,4 +136,19 @@ describe('ContourSegmenter', () => {
       expect(URL.createObjectURL).toHaveBeenCalledTimes(5);
     });
   });
+
+  it('rejects oversized images before creating preview URLs', async () => {
+    const user = userEvent.setup();
+
+    render(<ContourSegmenter />);
+
+    const input = screen.getByLabelText('Upload image');
+    const file = new File(['x'], 'large.png', { type: 'image/png' });
+    Object.defineProperty(file, 'size', { value: 26 * 1024 * 1024 });
+
+    await user.upload(input, file);
+
+    expect(await screen.findByText('Please choose an image up to 25 MB.')).toBeInTheDocument();
+    expect(URL.createObjectURL).not.toHaveBeenCalled();
+  });
 });

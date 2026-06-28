@@ -9,6 +9,7 @@ import {
 } from '../utils/lineSegmentation';
 
 const acceptedMimeTypes = ['image/png', 'image/jpeg'];
+const MAX_IMAGE_SIZE_BYTES = 25 * 1024 * 1024;
 const keepModeOptions = [
   { label: 'Inside', value: 'inside' },
   { label: 'Outside', value: 'outside' },
@@ -171,6 +172,11 @@ export default function ContourSegmenter() {
 
     if (!acceptedMimeTypes.includes(file.type)) {
       setError('Please choose a PNG or JPEG image.');
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      setError('Please choose an image up to 25 MB.');
       return;
     }
 

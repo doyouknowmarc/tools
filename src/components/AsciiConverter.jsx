@@ -3,6 +3,8 @@ import { GripVertical, Upload, Download } from 'lucide-react';
 
 // Define a type for colored ASCII characters (using JSDoc for clarity)
 /** @typedef {{char: string, color: string}} ColoredChar */
+const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024;
+const supportedImageTypes = ['image/png', 'image/jpeg', 'image/webp'];
 
 export default function AsciiConverter() {
   useEffect(() => {
@@ -30,6 +32,7 @@ export default function AsciiConverter() {
   const [isDragging, setIsDragging] = useState(false);
   const [isDraggingFile, setIsDraggingFile] = useState(false);
   const [error, setError] = useState(null);
+  const [feedback, setFeedback] = useState('');
   const [isDesktop, setIsDesktop] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const [sidebarNarrow, setSidebarNarrow] = useState(false);
@@ -88,6 +91,8 @@ export default function AsciiConverter() {
     if (imageLoaded && imageRef.current) {
       convertToAscii();
     }
+    // convertToAscii reads from canvas/image refs and is intentionally driven by these controls.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resolution, inverted, grayscale, charSet, imageLoaded]);
 
   useEffect(() => {
@@ -164,10 +169,16 @@ export default function AsciiConverter() {
   };
 
   const handleFileUpload = (file) => {
-    if (!file.type.startsWith('image/')) {
-      setError('Please upload an image file');
+    if (!supportedImageTypes.includes(file.type)) {
+      setError('Please upload a PNG, JPEG, or WebP image');
       return;
     }
+
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      setError('Please upload an image up to 10 MB');
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
       if (e.target && e.target.result) {
@@ -250,6 +261,8 @@ export default function AsciiConverter() {
     if (imageLoaded && !loading && !error) {
       renderToCanvas();
     }
+    // renderToCanvas paints the current ASCII state into the backing canvas ref.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asciiArt, coloredAsciiArt, grayscale, loading, error, imageLoaded]);
 
   const convertToAscii = () => {
@@ -340,6 +353,31 @@ export default function AsciiConverter() {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+  };
+
+  const copyAsciiArt = async () => {
+    if (!asciiArt) {
+      setError('No ASCII art to copy');
+      return;
+    }
+
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(asciiArt);
+      } else {
+        const el = document.createElement('textarea');
+        el.value = asciiArt;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+      }
+
+      setFeedback('ASCII art copied to clipboard.');
+      setError(null);
+    } catch {
+      setError('Clipboard copy failed');
+    }
   };
 
   return (
@@ -495,19 +533,7 @@ export default function AsciiConverter() {
 
               <div className="flex gap-2 pt-4 border-t border-stone-700">
                 <button
-                  onClick={() => {
-                    if (!asciiArt) {
-                      setError('No ASCII art to copy');
-                      return;
-                    }
-                    const el = document.createElement('textarea');
-                    el.value = asciiArt;
-                    document.body.appendChild(el);
-                    el.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(el);
-                    alert('ASCII art copied to clipboard!');
-                  }}
+                  onClick={copyAsciiArt}
                   className="flex-1 bg-stone-700 hover:bg-stone-600 text-stone-200 border border-stone-600 px-4 py-2 rounded"
                   disabled={loading || !imageLoaded}
                 >
@@ -531,6 +557,7 @@ export default function AsciiConverter() {
                   <Upload className="h-4 w-4" />
                 </button>
               </div>
+              {feedback ? <p className="text-sm text-emerald-300">{feedback}</p> : null}
             </div>
           </div>
         </div>

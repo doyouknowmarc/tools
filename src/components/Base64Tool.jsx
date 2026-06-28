@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 
+const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024;
+const supportedImageTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+
 function encodeTextToBase64(value) {
   if (!value) {
     return '';
@@ -73,6 +76,15 @@ function formatBytes(size) {
   return `${value.toFixed(value >= 10 || index === 0 ? 0 : 1)} ${units[index]}`;
 }
 
+function estimateDecodedBytes(base64Value) {
+  if (!base64Value) {
+    return 0;
+  }
+
+  const padding = base64Value.endsWith('==') ? 2 : base64Value.endsWith('=') ? 1 : 0;
+  return Math.floor((base64Value.length * 3) / 4) - padding;
+}
+
 export default function Base64Tool() {
   const [textMode, setTextMode] = useState('encode');
   const [textInput, setTextInput] = useState('');
@@ -120,9 +132,21 @@ export default function Base64Tool() {
     try {
       const trimmed = decodeInput.trim();
       const prefixMatch = trimmed.match(/^data:([^;]+);base64,/i);
-      const mimeType = prefixMatch ? prefixMatch[1] : 'image/png';
+      const mimeType = prefixMatch ? prefixMatch[1].toLowerCase() : 'image/png';
       const base64Part = prefixMatch ? trimmed.split(',')[1] : trimmed;
       const cleaned = base64Part.replace(/\s+/g, '');
+
+      if (!supportedImageTypes.includes(mimeType)) {
+        setDecodedImage({ dataUrl: '', mimeType: 'image/png' });
+        setDecodeError('Unsupported image type. Use PNG, JPEG, WebP, or GIF data.');
+        return;
+      }
+
+      if (estimateDecodedBytes(cleaned) > MAX_IMAGE_SIZE_BYTES) {
+        setDecodedImage({ dataUrl: '', mimeType: 'image/png' });
+        setDecodeError('Decoded image is too large. Use an image up to 10 MB.');
+        return;
+      }
 
       atob(cleaned);
 
@@ -171,8 +195,15 @@ export default function Base64Tool() {
       return;
     }
 
-    if (!file.type.startsWith('image/')) {
-      setImageError('Please select an image file.');
+    if (!supportedImageTypes.includes(file.type)) {
+      setImageError('Please select a PNG, JPEG, WebP, or GIF image.');
+      setEncodedImage('');
+      setImageMeta(null);
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      setImageError('Please select an image up to 10 MB.');
       setEncodedImage('');
       setImageMeta(null);
       return;
@@ -374,7 +405,12 @@ export default function Base64Tool() {
 
             <label className="block cursor-pointer rounded-lg border border-dashed border-gray-300 p-6 text-center text-sm text-gray-600 hover:border-gray-400">
               <span className="font-medium text-gray-700">Click to upload</span>
-              <input type="file" accept="image/*" className="sr-only" onChange={handleImageUpload} />
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/gif"
+                className="sr-only"
+                onChange={handleImageUpload}
+              />
             </label>
 
             {imageMeta ? (
