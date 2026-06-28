@@ -12,10 +12,10 @@ describe('PomodoroTimer', () => {
     audioPlayMock = vi.fn().mockResolvedValue(undefined);
     vi.stubGlobal(
       'Audio',
-      vi.fn(() => ({
-        currentTime: 0,
-        play: audioPlayMock,
-      }))
+      vi.fn(function AudioMock() {
+        this.currentTime = 0;
+        this.play = audioPlayMock;
+      })
     );
 
     document.title = 'Helpful Tools';

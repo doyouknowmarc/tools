@@ -44,10 +44,10 @@ Most tools run entirely in the browser. The main optional integration is a local
 
 ## Tech stack
 
-- React 18
-- Vite 7
-- Tailwind CSS
-- Vitest + Testing Library
+- React 19
+- Vite 8
+- Tailwind CSS 4
+- Vitest 4 + Testing Library
 - Playwright for browser and screenshot coverage
 - ESLint
 - `heic2any` for HEIC conversion
@@ -55,6 +55,9 @@ Most tools run entirely in the browser. The main optional integration is a local
 - browser canvas and pixel-processing utilities for contour-based segmentation
 - `tesseract.js`, `pdfjs-dist`, and `pdf-lib` for OCR and PDF handling
 - `leaflet` for map-based location visualisation
+
+`@imgly/background-removal` currently resolves `onnxruntime-web@1.21.0` as its
+exact peer dependency.
 
 ## Getting started
 

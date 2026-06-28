@@ -1,6 +1,5 @@
 import js from '@eslint/js';
 import globals from 'globals';
-import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default [
@@ -23,18 +22,12 @@ export default [
         ...globals.node,
       },
     },
-    settings: {
-      react: {
-        version: 'detect',
-      },
-    },
     plugins: {
-      react: reactPlugin,
       'react-hooks': reactHooks,
     },
     rules: {
-      ...reactPlugin.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
       'no-unused-vars': [
         'error',
         {
@@ -43,9 +36,7 @@ export default [
           varsIgnorePattern: '^[A-Z][A-Za-z0-9]*$|^[A-Z_]+$',
         },
       ],
-      'react/no-unescaped-entities': 'off',
-      'react/prop-types': 'off',
-      'react/react-in-jsx-scope': 'off',
+      'preserve-caught-error': 'off',
     },
   },
 ];
