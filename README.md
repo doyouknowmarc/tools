@@ -34,6 +34,8 @@ Most tools run entirely in the browser. The main optional integration is a local
 - Public IP Address
 - Location Data Visualizer
 - Color Picker
+- Big Text – fullscreen shouty messages with backgrounds, text styles, motion (flow ticker, wave, typewriter…), emoji rain, slideshow, live typing and a strobe party mode (with photosensitivity warning)
+- Fullscreen Color – fill the screen with a solid color: presets, green/blue screen, custom hex, ring-light color temperature, brightness and auto-cycle for dead-pixel tests
 - Coming Soon placeholder
 
 ### Calculators and demos
@@ -185,6 +187,8 @@ Each visible sidebar tool has a current desktop screenshot in [`docs/screenshots
 | Token Rate Demo | ![Token Rate Demo](docs/screenshots/21-token-rate-demo.jpg) |
 | ES RAM Calculator | ![ES RAM Calculator](docs/screenshots/22-es-ram-calculator.jpg) |
 | Pro & Con List | ![Pro & Con List](docs/screenshots/23-pro-and-con-list.jpg) |
+| Big Text | ![Big Text](docs/screenshots/25-big-text.jpg) |
+| Fullscreen Color | ![Fullscreen Color](docs/screenshots/26-fullscreen-color.jpg) |
 | Coming Soon | ![Coming Soon](docs/screenshots/24-coming-soon.jpg) |
 
 ## Contributing
